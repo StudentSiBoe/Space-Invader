@@ -4,3 +4,4 @@
 int test = 187;
 int mathe=5+3;
 float kommazahl = 5.3f;
+bool GameLogic=true;
