@@ -4,8 +4,6 @@ int main (int argc, char ** argv) {
     
     Game game;
     game.run();
-    int test = 42;
-    int boe;
     return 0;
 
 }

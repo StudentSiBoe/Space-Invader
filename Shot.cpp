@@ -1,3 +1,3 @@
 #include "Shot.h"
 
-int shot = 42;
+//int shot = 42;
