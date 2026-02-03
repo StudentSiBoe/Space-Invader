@@ -10,8 +10,15 @@ class Player{
     void update(float dt, float windowWidth);
     void render(sf :: RenderWindow&fesnter);
 
+    //Erweiterungen Methode - Schuss
+    bool shotRequest() const;
+    void processShotRequest();
+    sf :: Vector2f shotStartPosition() const;
+
     private:
     sf :: RectangleShape spieler;                           //Zum anlegen der Spieler Eigenschaften
     float speed;
     float direction;
+
+    bool shotRequested;                                     //Tastenabfrage für Schuss
 };

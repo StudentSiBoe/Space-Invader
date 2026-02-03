@@ -33,7 +33,7 @@ void Game :: run () {
         }
 
     
-    // Oeffnet Fenster in Groesse x, y... Bleibt offen bis Befehl - Schliessen kommt, dann clear und löscht das fenster
+    // Oeffnet Fenster, Bleibt offen bis Befehl - Schliessen kommt, dann clear und löschen
     
     float dt = clock.restart().asSeconds();
     //SFML Stoppuhr - clock.restart(), Gibt die Zeit seid dem letztem Restart zurück und .asSeconds() wandelt die Zeit in Sekunden um                                         
@@ -42,12 +42,34 @@ void Game :: run () {
 
     //Eingaben vom Player
     player.handleInput();                                                           //Bewegungssteuerung Spieler
+    
+    //Schuss erzeugen bei Tastendruck --------------- ??
+    if (player.shotRequest()) {
+        if(!playershot.has_value() || !playershot->isActive()) {
+            sf :: Vector2f pos = player.shotStartPosition();
+            playershot = Shot(pos.x, pos.x);
+        }
+        player.processShotRequest();
+    }
 
     //Player aktualisieren
     player.update(dt, static_cast<float>(fenster.getSize().x));                     //deltaTime und Breite des Feldes uebergeben an Positionspruefung 
 
+
+    if (playershot.has_value() && playershot->isActive()) {
+        playershot->update(dt);
+        if (playershot->upperLimit() < 0.f) {
+            playershot->deactivate();
+        }
+    }
+
     fenster.clear();
     player.render(fenster);
+
+    if (playershot.has_value()) {
+        playershot->render(fenster);
+    }
+    
     fenster.display();
 
     }
