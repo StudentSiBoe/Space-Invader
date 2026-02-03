@@ -7,28 +7,28 @@ Shot :: Shot(float AbX, float AbY) {                            //Objekt Schuss 
 
     schuss.setPosition(AbX, AbY);                               //Schuss Startposition definieren
 
-    speed = 500.f;                                              //Schuss Geschwindigkeit definieren
+    speed = 650.f;                                              //Schuss Geschwindigkeit definieren
     active = true;                                              //Schuss Ja oder Nein
 }
 
 void Shot :: update(float dt) {
-    if (!active) return;
-    schuss.move(0.f, -speed * dt);                              // - weil der Schuss nach oben gehen soll           
+    if (!active) return;                                        //nur bei einem Schuss die Methode ausführen
+    schuss.move(0.f, -speed * dt);                              //Schussbewegung in x-Richtung = 0 und y-Richtung: - Geschwindigkeit(hoch) * delta time           
 }
 
-void Shot :: render(sf :: RenderWindow&fenster) const {
+void Shot :: render(sf :: RenderWindow&fenster) const {         //Zeichnet den Schuss mit Eigenschaften, wenn geschossen wird
     if (!active) return;
     fenster.draw(schuss);
 }
 
-bool Shot :: isActive() const {
+bool Shot :: isActive() const {                                 //Schuss auf aktiv/true setzen
     return active;
 }
 
-void Shot :: deactivate() {
+void Shot :: deactivate() {                                     //Schuss auf deaktiviert/false setzen
     active = false;
 }
 
-float Shot :: upperLimit() const {
+float Shot :: upperLimit() const {                              //
     return schuss.getPosition().y;
 }

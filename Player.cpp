@@ -9,7 +9,7 @@ Player :: Player() {                                            //Objekt Spieler
     speed = 600.f;                                              //Bewegungsgeschwindigkeit [Pixel pro Sekunde]
     direction = 0.f;
 
-    shotRequested = false;                                      //Schuss nur bei Tasteneindruck
+    shotStatus = false;                                      //Schuss nur bei Tasteneindruck
 }
 
 void Player :: handleInput() {
@@ -23,7 +23,7 @@ void Player :: handleInput() {
     }
     //Schuss - Player
     if (sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: Space)) {  //Bei Eingabe Space
-        shotRequested = true;                                       //Schussanforderung true setzen
+        shotStatus = true;                                       //Schussanforderung true setzen
     }
 }
 
@@ -40,20 +40,20 @@ void Player :: update(float dt, float windowWidth) {                //float dt =
     spieler.setPosition(x, spielerPosY);                            //Wenn ausserhalb, Position ueberschreiben
 }
 
-void Player :: render(sf :: RenderWindow&fenster) {
+void Player :: render(sf :: RenderWindow&fenster) {                 //Zeichnet die Player Figur mit vorgegebenen Eigenschaften
     fenster.draw(spieler);
 }
 
-bool Player :: shotRequest() const {
-    return shotRequested;
+bool Player :: shotRequest() const {                                //Gibt den Shot-Status zurück... 
+    return shotStatus;                                              //Um zu schauen ob der Befehl zum schiessen kam oder nicht
 }
 
-void Player :: processShotRequest() {
-    shotRequested = false;
+void Player :: processShotRequest() {                               //Nach einem Schuss die Schussbestaetigung wieder ruecksetzen
+    shotStatus = false;
 }
 
-sf :: Vector2f Player :: shotStartPosition() const {
-    float x = spieler.getPosition().x + spieler.getSize().x / 2.f - 3.f;
-    float y = spieler.getPosition().y - spielerPosY;
-    return{x, y};
+sf :: Vector2f Player :: shotStartPosition() const {                //Startpunkt fuer Schuss-Animation definieren
+    float x = spieler.getPosition().x + spieler.getSize().x / 2.f - 3.f;        //X-Koordinate Ab da wo der Spieler ist + halbe Breite und halbem Schuss
+    float y = spieler.getPosition().y - 18.f;                                   //Y-Koordinate Ab der oberseite des Spielers
+    return{x, y};                                                               //Werte uebergeben
 }

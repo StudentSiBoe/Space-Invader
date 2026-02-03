@@ -20,5 +20,5 @@ class Player{
     float speed;
     float direction;
 
-    bool shotRequested;                                     //Tastenabfrage für Schuss
+    bool shotStatus;                                     //Tastenabfrage für Schuss
 };

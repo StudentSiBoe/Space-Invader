@@ -1,22 +1,4 @@
 #include "Game.h"
-/*
-int main (int argc, char ** argv) {
-    
-    Game game;
-    game.run();
-    return 0;
-
-}
-void Game::run(){
-    init();
-    while(true){
-        processInput();         // Eingaben einlesen
-        update();               // staendige Aktualisierung
-        render();               // Ausgabe auf das Spielfeld-Fenster
-    }
-}
-    NUR ZUM TEST AUSKOMMENTIERT    
-*/
 
 void Game :: run () {
 
@@ -47,12 +29,11 @@ void Game :: run () {
     if (player.shotRequest()) {
         if(!playershot.has_value() || !playershot->isActive()) {
             sf :: Vector2f pos = player.shotStartPosition();
-            playershot = Shot(pos.x, pos.x);
+            playershot = Shot(pos.x, pos.y);
         }
         player.processShotRequest();
     }
 
-    //Player aktualisieren
     player.update(dt, static_cast<float>(fenster.getSize().x));                     //deltaTime und Breite des Feldes uebergeben an Positionspruefung 
 
 
@@ -69,7 +50,7 @@ void Game :: run () {
     if (playershot.has_value()) {
         playershot->render(fenster);
     }
-    
+
     fenster.display();
 
     }
