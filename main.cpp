@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include "GameField.h"
+#include "Game.h"
 
 int main () {
 
-    GameField sfml;
-    sfml.buildWindow();
+    Game spiel;
+    spiel.run();
 
     return 0;
 }
