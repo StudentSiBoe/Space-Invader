@@ -7,10 +7,11 @@ class Player{
     Player();
 
     void handleInput();                                     //Bewegungssteuerung Spielfigur
-    void update(float dt);
+    void update(float dt, float windowWidth);
     void render(sf :: RenderWindow&fesnter);
 
     private:
-    sf :: RectangleShape shape;
+    sf :: RectangleShape spieler;                           //Zum anlegen der Spieler Eigenschaften
     float speed;
+    float direction;
 };

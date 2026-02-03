@@ -35,13 +35,13 @@ void Game :: run () {
     
     // Oeffnet Fenster in Groesse x, y... Bleibt offen bis Befehl - Schliessen kommt, dann clear und löscht das fenster
     
-    float dt = clock.restart().asSeconds();
+    float dt = clock.restart().asSeconds();                                         //SFML Stoppuhr - Gibt die Zeit seid dem letztem Restart zurück und wandelt das in Sekunden um
 
     //Eingaben vom Player
-    player.handleInput();
+    player.handleInput();                                                           //Bewegungssteuerung Spieler
 
     //Player aktualisieren
-    player.update(dt);
+    player.update(dt, static_cast<float>(fenster.getSize().x));                     //deltaTime und Breite des Feldes uebergeben an Positionspruefung 
 
     fenster.clear();
     player.render(fenster);

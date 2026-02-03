@@ -2,27 +2,37 @@
 
 Player :: Player() {                                            //Objekt Spieler erzeugen
 
-    shape.setSize({50.f, 30.f});                                //Spielerfigur Groesse
-    shape.setFillColor(sf :: Color :: Blue);                    //Spielerfigut Farbe
-    shape.setPosition(420.f, 850.f);                            //Position des Spielers
+    spieler.setSize({50.f, 30.f});                              //Spielerfigur Groesse
+    spieler.setFillColor(sf :: Color :: Blue);                  //Spielerfigut Farbe
+    spieler.setPosition(420.f, 250.f);                          //Position des Spielers
 
-    speed = 700.f;                                              //Bewegungsgeschwindigkeit [Pixel pro Sekunde]
+    speed = 600.f;                                              //Bewegungsgeschwindigkeit [Pixel pro Sekunde]
+    direction = 0.f;
 }
 
 void Player :: handleInput() {
-
-    if (sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: Left)) {       //Bei Eingabe Links
-        shape.move(-3.f, 0.f);                                          //Bewegung ein Feld nach Links auf X, Y=0
+    direction = 0.f;
+    if (sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: Left)) {   //Bei Eingabe Links
+        direction -= 1.f;                                           //Bewegung ein Feld nach Links auf X, Y=0
     }
-    if (sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: Right)) {      //Bei Eingabe Rechts
-        shape.move(3.f, 0.f);                                           //Bewegung ein Feld nach Links auf X, Y=0
+    if (sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: Right)) {  //Bei Eingabe Rechts
+        direction += 1.f;;                                          //Bewegung ein Feld nach Links auf X, Y=0
     }
 }
 
-void Player :: update(float dt) {
-    shape.move(0.f, 0.f);
+void Player :: update(float dt, float windowWidth) {                //float dt = delta Time 
+    spieler.move(direction * speed * dt, 0.f);
+    
+    //Grenzen fuer die Bewegung des Spielers einstellen
+    float x = spieler.getPosition().x;                              //x Position ermitteln
+    float width = spieler.getSize().x;                              //Breite des Spielers speichern
+
+    if(x < 0.f) x = 0.f;                                            //Pruefen Links
+    if(x + width > windowWidth) x = windowWidth - width;            //Pruefen Rechts
+
+    spieler.setPosition(x, 0.f);                                    //Wenn ausserhalb, Position ueberschreiben
 }
 
 void Player :: render(sf :: RenderWindow&fenster) {
-    fenster.draw(shape);
+    fenster.draw(spieler);
 }
