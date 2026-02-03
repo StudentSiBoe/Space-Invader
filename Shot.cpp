@@ -21,8 +21,8 @@ void Shot :: render(sf :: RenderWindow&fenster) const {         //Zeichnet den S
     fenster.draw(schuss);
 }
 
-bool Shot :: isActive() const {                                 //Schuss auf aktiv/true setzen
-    return active;
+bool Shot :: isActive() const {                                 //Schuss ist aktiviert (fliegt noch)
+    return active;                                              //aktiv = true, wenn neuer Schuss erzeugt wird...
 }
 
 void Shot :: deactivate() {                                     //Schuss auf deaktiviert/false setzen
