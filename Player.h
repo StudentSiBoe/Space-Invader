@@ -5,7 +5,7 @@ class Player{
     public:
     
     Player();
-
+    float spielerPosY = 870.f;
     void handleInput();                                     //Bewegungssteuerung Spielfigur
     void update(float dt, float windowWidth);
     void render(sf :: RenderWindow&fesnter);
