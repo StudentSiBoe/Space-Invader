@@ -35,7 +35,10 @@ void Game :: run () {
     
     // Oeffnet Fenster in Groesse x, y... Bleibt offen bis Befehl - Schliessen kommt, dann clear und löscht das fenster
     
-    float dt = clock.restart().asSeconds();                                         //SFML Stoppuhr - Gibt die Zeit seid dem letztem Restart zurück und wandelt das in Sekunden um
+    float dt = clock.restart().asSeconds();
+    //SFML Stoppuhr - clock.restart(), Gibt die Zeit seid dem letztem Restart zurück und .asSeconds() wandelt die Zeit in Sekunden um                                         
+    //Spiel laeuft mit vorgegebenen 60 fps -> dt (Zeit zwischen e Frames) = ca. 0,02sec -> dt = 0,02s
+    //Im Player: spieler.move(direction * speed * dt, 0.f); == Bewegung des Players in einem Frame
 
     //Eingaben vom Player
     player.handleInput();                                                           //Bewegungssteuerung Spieler

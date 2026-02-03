@@ -3,7 +3,7 @@
 Player :: Player() {                                            //Objekt Spieler erzeugen
 
     spieler.setSize({50.f, 30.f});                              //Spielerfigur Groesse
-    spieler.setFillColor(sf :: Color :: Blue);                  //Spielerfigut Farbe
+    spieler.setFillColor(sf :: Color :: Yellow);                  //Spielerfigut Farbe
     spieler.setPosition(420.f, spielerPosY);                          //Position des Spielers
 
     speed = 600.f;                                              //Bewegungsgeschwindigkeit [Pixel pro Sekunde]
@@ -30,7 +30,7 @@ void Player :: update(float dt, float windowWidth) {                //float dt =
     if(x < 0.f) x = 0.f;                                            //Pruefen Links
     if(x + width > windowWidth) x = windowWidth - width;            //Pruefen Rechts
 
-    spieler.setPosition(x, spielerPosY);                                    //Wenn ausserhalb, Position ueberschreiben
+    spieler.setPosition(x, spielerPosY);                            //Wenn ausserhalb, Position ueberschreiben
 }
 
 void Player :: render(sf :: RenderWindow&fenster) {
