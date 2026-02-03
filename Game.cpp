@@ -1,5 +1,5 @@
 #include "Game.h"
-
+/*
 int main (int argc, char ** argv) {
     
     Game game;
@@ -15,3 +15,7 @@ void Game::run(){
         render();               // Ausgabe auf das Spielfeld-Fenster
     }
 }
+    NUR ZUM TEST AUSKOMMENTIERT    
+*/
+
+
