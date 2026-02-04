@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <iostream>
 
 void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
     aliens.clear();                                                                 //Erstmal aufräumen
