@@ -18,4 +18,11 @@ class Game {
     
     std :: vector<Alien> aliens;
     void buildAliens();
+
+    float alienDirection = 1.f;             //Bewegungsrichtung pro Frame (+2 nach rechts / -2 nach links)
+    float alienSpeed = 50.f;                //Bewegungsgeschwindigkeit (px pro Sekunde)
+    float alienDrop = 30.f;                 //Alien bewegung nach unten (y muss groesser werden)
+
+    private:
+    void updateAliens(float dt);
 };

@@ -21,6 +21,31 @@ void Game :: buildAliens() {                                                    
     }
 }
 
+void Game :: updateAliens(float dt) {                                               //Positions Aktualisierung der Aliens
+    float moveX = alienDirection * alienSpeed * dt;                                 //Bewegung in X-Richtung (Bestehend aus Richtung, Geschwindigkeit und delta Time)
+    bool border = false;                                                            //Grenze des Fensters anlegen (Bewegungsradius)
+
+    for (const Alien& a : aliens) {
+        if (alienDirection > 0 && a.right() >= fenster.getSize().x) {               //Alienbewegung nach rechts (Direction +) UND rechte Kante des Aliens ist an / ueber der Fenstergroesse (rechte Kante)
+            border = true;                                                          //DANN setze die Grenze 
+        }
+        if (alienDirection < 0 && a.left() <= 0.f) {                                //Alienbewegung nach links (Direction -) UND linke Kante des Aliens ist an /ueber dem beginn des Fensters (linke Kante) 
+            border = true;                                                          //DANN setze die Grenze
+        }                                  
+    }
+
+    if (border) {                                                                   //Wenn die Grenze erreicht ist
+        for (Alien& a : aliens) {                                                   //Jedes Alien soll:
+            a.move(0.f, alienDrop);                                                 //Nach unten (Y) um den vorgegebenen Wert alienDrop bewegt werden
+        }
+        alienDirection *= -1.f;                                                     //Danach wird die Bewegungsrichtung umgedreht
+    } else {                                                                        //Solange keine Grenze erreicht ist
+        for (Alien& a : aliens) {                                                   //Soll sich jedes Alien
+            a.move(moveX, 0.f);                                                     //Um die errechnete Bewegungseinheit auf X bewegen
+        }
+    }
+}
+
 void Game :: run () {
 
     sf :: Clock clock;
@@ -38,9 +63,9 @@ void Game :: run () {
         }
 
     
-    // Oeffnet Fenster, Bleibt offen bis Befehl - Schliessen kommt, dann clear und löschen
+    // Oeffnet Fenster, Bleibt offen bis Befehl - Schliessen kommt(oben rechts X), dann clear und löschen
     
-    float dt = clock.restart().asSeconds();
+    float dt = clock.restart().asSeconds();                                         //dt berechnen 
     //SFML Stoppuhr - clock.restart(), Gibt die Zeit seid dem letztem Restart zurück und .asSeconds() wandelt die Zeit in Sekunden um                                         
     //Spiel laeuft mit vorgegebenen 60 fps -> dt (Zeit zwischen e Frames) = ca. 0,02sec -> dt = 0,02s
     //Im Player: spieler.move(direction * speed * dt, 0.f); == Bewegung des Players in einem Frame
@@ -58,7 +83,7 @@ void Game :: run () {
     }
 
     player.update(dt, static_cast<float>(fenster.getSize().x));                     //deltaTime und Breite des Feldes uebergeben an Positionspruefung 
-
+    updateAliens(dt);                                                               //Aufruf Alien update Methode mit delta Time
 
     if (playershot.has_value() && playershot->isActive()) {                         //Schuss existiert und ist aktiv
         playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
