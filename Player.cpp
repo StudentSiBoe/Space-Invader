@@ -2,7 +2,7 @@
 
 Player :: Player() {                                            //Objekt Spieler erzeugen
 
-    spieler.setSize({50.f, 30.f});                              //Spielerfigur Groesse definieren
+    spieler.setSize({60.f, 30.f});                              //Spielerfigur Groesse definieren
     spieler.setFillColor(sf :: Color :: Green);                //Spielerfigut Farbe definieren
     spieler.setPosition(420.f, spielerPosY);                    //Position des Spielers definieren
 

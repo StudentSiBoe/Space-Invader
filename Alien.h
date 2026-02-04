@@ -1,8 +1,13 @@
-struct Alien{
-    int x, y;
-    int hp;
-    char symbol;
-    bool alive;
+#pragma once
+#include <SFML/Graphics.hpp>
 
-    void move(int dx, int dy);
+struct Alien{
+
+    public:
+    Alien(float x, float y);
+    
+    void render(sf :: RenderWindow&fenster) const;
+
+    private:
+    sf :: RectangleShape alien;
 };

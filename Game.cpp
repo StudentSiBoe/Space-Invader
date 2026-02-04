@@ -1,10 +1,33 @@
 #include "Game.h"
 
+void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
+    aliens.clear();                                                                 //Erstmal aufräumen
+
+    const int rows = 4;                                                             //Anzahl Reihen nach unten (y)
+    const int cols = 12;                                                            //Anzahl Spalten nach rechts (x)
+
+    const float startX = 100.f;                                                      //Start X Koordinate erstes Alien
+    const float startY = 150.f;                                                     //Start Y Koordinate erstes Alien
+
+    const float gapX = 60.f;                                                        //Abstand X zwischen zwei Aliens
+    const float gapY = 60.f;                                                        //Abstand Y zwischen zwei Aliens
+
+    for (int i = 0; i < rows; i++) {                                                //Schleife - Reihen durchlaufen 
+        for (int j = 0; j < cols; j++) {                                            //Schleife - Spalten durchgehen 
+            float x = startX + j * gapX;                                            //X - Position fuer Alien Plazierung
+            float y = startY + i * gapY;                                            //Y - Position fuer Alien Plazierung
+            aliens.emplace_back(x, y);                                              //Positionen (x,y) weitergeben
+        }
+    }
+}
+
 void Game :: run () {
 
     sf :: Clock clock;
     
     fenster.setFramerateLimit(60);                                                  //FPS einstellen
+
+    buildAliens();                                                                  //Aufruf - Bau Alien-Reihen
 
     while (fenster.isOpen()) {
         sf :: Event event;                                                          //Variable event zum abfangen von befehlen
@@ -45,7 +68,11 @@ void Game :: run () {
     }
 
     fenster.clear();
-    player.render(fenster);
+    player.render(fenster);                                                         //Player im Fenster zeichen
+
+    for (const Alien& a : aliens) {                                                 //a ist eine Referenz (&) auf ein Alien, welches nicht veraendert werden darf (const)
+        a.render(fenster);                                                          //a : aliens -> a bekommt nacheinander jedes Element aus aliens (Was eine Referenz von Alien ist und keine Kopie!)
+    }                                                                               //Diese Referenz a in das fenster zeichnen
 
     if (playershot.has_value()) {                                                   //Wenn gerade einen Shot existiert, DANN
         playershot->render(fenster);                                                //Zeichne den Schuss in das Fenster
