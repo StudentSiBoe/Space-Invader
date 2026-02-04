@@ -3,10 +3,10 @@
 Player :: Player() {                                            //Objekt Spieler erzeugen
 
     spieler.setSize({50.f, 30.f});                              //Spielerfigur Groesse definieren
-    spieler.setFillColor(sf :: Color :: Yellow);                //Spielerfigut Farbe definieren
+    spieler.setFillColor(sf :: Color :: Green);                //Spielerfigut Farbe definieren
     spieler.setPosition(420.f, spielerPosY);                    //Position des Spielers definieren
 
-    speed = 600.f;                                              //Bewegungsgeschwindigkeit [Pixel pro Sekunde]
+    speed = 550.f;                                              //Bewegungsgeschwindigkeit [Pixel pro Sekunde]
     direction = 0.f;
 
     shotStatus = false;                                      //Schuss nur bei Tasteneindruck

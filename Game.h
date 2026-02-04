@@ -17,5 +17,5 @@ class Game {
     private:
     sf :: RenderWindow fenster{sf :: VideoMode(900, 900), "Space Invaders"};    //Erstellung Fenster in Groesse (x, y)
     Player player;
-    std :: optional<Shot> playershot;       //???
+    std :: optional<Shot> playershot;       //Im Player kann es einen Shot geben, muss es aber nicht...Daher spaetere Kontrollen
 };

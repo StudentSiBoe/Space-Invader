@@ -27,7 +27,7 @@ void Game :: run () {
     
     //Schuss Abfrage (es kann nur einen Schuss geben)
     if (player.shotRequest()) {                                                     //Wenn Space-Taste gedrueckt, shotRequest gibt true zurueck
-        if(!playershot.has_value() || !playershot->isActive()) {                    //Wenn kein Schuss existiert ODER kein Schuss aktiviert (noch fliegt) ist
+        if(!playershot.has_value() || !playershot->isActive()) {                    //Wenn kein Schuss existiert (has_value) ODER kein Schuss aktiviert (noch fliegt/isActive) ist
             sf :: Vector2f pos = player.shotStartPosition();                        //Neue Start-Pos fuer neuen Schuss ermitteln
             playershot = Shot(pos.x, pos.y);                                        //Neuen Shot dort erzeugen...
         }
@@ -37,8 +37,8 @@ void Game :: run () {
     player.update(dt, static_cast<float>(fenster.getSize().x));                     //deltaTime und Breite des Feldes uebergeben an Positionspruefung 
 
 
-    if (playershot.has_value() && playershot->isActive()) {
-        playershot->update(dt);
+    if (playershot.has_value() && playershot->isActive()) {                         //Schuss existiert und ist aktiv
+        playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
         if (playershot->upperLimit() < 120.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
             playershot->deactivate();                                               //Schaltet den Schuss aus 
         }
@@ -47,11 +47,27 @@ void Game :: run () {
     fenster.clear();
     player.render(fenster);
 
-    if (playershot.has_value()) {
-        playershot->render(fenster);
-    }
+    if (playershot.has_value()) {                                                   //Wenn gerade einen Shot existiert, DANN
+        playershot->render(fenster);                                                //Zeichne den Schuss in das Fenster
+    }                                                                               //Hier keine isActive Abfrage, weil render Active bereits kontrolliert
 
     fenster.display();
 
     }
 }
+
+
+
+
+/*
+    OPTIONALE ANPASSUNG fuer Event Schleife, damit Space-Taste nicht gehalten werden kann (isKeypressed -> Keypressed)
+    while (fenster.pollEvent(event)) {
+    if (event.type == sf::Event::Closed)
+        fenster.close();
+
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+            // EINMALIG pro Druck
+            shotRequested = true;
+        }
+    }
+*/
