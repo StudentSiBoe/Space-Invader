@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <iostream>
+#include <string>
 
 void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
     aliens.clear();                                                                 //Erstmal aufräumen
@@ -46,6 +47,40 @@ void Game :: updateAliens(float dt) {                                           
         }
     }
 }
+
+void Game :: initDisplay() {                                                        //Definieren der Texteigenschaften - Display
+    font.loadFromFile("assets/fonts/zephyrean-brk.ttf");                            //Textart laden
+
+    gameName.setFont(font);                                                         //Textart zuweisen
+    gameName.setCharacterSize(95);                                                  //Textgroesse definieren
+    gameName.setString("SPACE INVADERS");                                           //Text definieren
+    gameName.setFillColor(sf :: Color :: Green);                                    //Textfarbe definieren
+
+    scoreBoard.setFont(font);                                                       //Textart zuweisen
+    scoreBoard.setCharacterSize(45);                                                //Textgroesse definieren
+    scoreBoard.setFillColor(sf :: Color :: Yellow);                                 //Textfarbe definieren
+
+    playerLives.setFont(font);                                                      //Textart zuweisen
+    playerLives.setCharacterSize(45);                                               //Textgroesse definieren
+    playerLives.setString("LIVES: ---");
+    playerLives.setFillColor(sf :: Color :: Yellow);                                //Textfarbe definieren
+
+    updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung
+}
+
+void Game :: updateDisplay() {                                                      //Aktualiert staendig den Score 
+    scoreBoard.setString("SCORE: " + std :: to_string(score));                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
+    scoreBoard.setPosition(10.f, 10.f);                                             //Position fuer Score definieren (x,y)
+
+    float fensterBreite = static_cast<float>(fenster.getSize().x);                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln)
+
+    auto titel = gameName.getLocalBounds();                                         //Mase des Text-Rechtecks 
+    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left, 5.f);    //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
+
+    auto livePoints = playerLives.getLocalBounds();                                 //Mase des Text-Rechtecks 
+    playerLives.setPosition(fensterBreite - livePoints.width - 10.f - livePoints.left, 10.f);   //10.f = Abstand zum Rand (fuer die Optik)
+
+}
 //-----------------------------------
 //------------HERZ-STUECK------------
 //-----------------------------------
@@ -54,6 +89,8 @@ void Game :: run () {
     sf :: Clock clock;
     
     fenster.setFramerateLimit(60);                                                  //FPS einstellen
+
+    initDisplay();
 
     buildAliens();                                                                  //Aufruf - Bau Alien-Reihen
 
@@ -95,6 +132,8 @@ void Game :: run () {
             if (playershot->hitbox().intersects(aliens[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
                 aliens.erase(aliens.begin() + i);                                   //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
                 playershot->deactivate();                                           //Schuss deaktivieren
+                score += scorePointsAlien;
+                updateDisplay();
                 break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
             }
         }
@@ -118,7 +157,9 @@ void Game :: run () {
     if (playershot.has_value()) {                                                   //Wenn gerade einen Shot existiert, DANN
         playershot->render(fenster);                                                //Zeichne den Schuss in das Fenster
     }                                                                               //Hier keine isActive Abfrage, weil render Active bereits kontrolliert
-
+    fenster.draw(playerLives);
+    fenster.draw(gameName);
+    fenster.draw(scoreBoard);
     fenster.display();                                                              //SFML Fenster auf dem Screen anzeigen
 
     }
