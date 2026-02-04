@@ -33,6 +33,6 @@ float Shot :: upperLimit() const {                              //Fuer den Vergl
     return schuss.getPosition().y;
 }
 
-sf :: FloatRect Shot :: hitbox() const {
-    return schuss.getGlobalBounds();
+sf :: FloatRect Shot :: hitbox() const {                        //FloatRect...Ist ein SFML Recheck
+    return schuss.getGlobalBounds();                            //betrachtet das aktuelle Shape/rechteck und nimmt Position, Groesse und baut ein aequivalentes Rechteck dazu
 }
