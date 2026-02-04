@@ -59,6 +59,8 @@ void Game :: run () {
 
 
 
+
+
 /*
     OPTIONALE ANPASSUNG fuer Event Schleife, damit Space-Taste nicht gehalten werden kann (isKeypressed -> Keypressed)
     while (fenster.pollEvent(event)) {

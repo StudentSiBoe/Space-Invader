@@ -29,6 +29,6 @@ void Shot :: deactivate() {                                     //Schuss auf dea
     active = false;
 }
 
-float Shot :: upperLimit() const {                              //
+float Shot :: upperLimit() const {                              //Fuer den Vergleich der aktuellen Pos-Y mit dem oberen Limit
     return schuss.getPosition().y;
 }
