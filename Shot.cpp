@@ -32,3 +32,7 @@ void Shot :: deactivate() {                                     //Schuss auf dea
 float Shot :: upperLimit() const {                              //Fuer den Vergleich der aktuellen Pos-Y mit dem oberen Limit
     return schuss.getPosition().y;
 }
+
+sf :: FloatRect Shot :: hitbox() const {
+    return schuss.getGlobalBounds();
+}

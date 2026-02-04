@@ -12,7 +12,9 @@ class Shot{
     bool isActive() const;
     void deactivate();
 
-    float upperLimit() const;                                        //obere Grenze Y-Pos (aus dem Fenster)
+    float upperLimit() const;                                       //obere Grenze Y-Pos (aus dem Fenster)
+
+    sf :: FloatRect hitbox() const;                                 //Hitbox fuer das Schuss Rechteck erzeugen
 
     private:
     sf :: RectangleShape schuss;

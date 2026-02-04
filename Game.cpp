@@ -6,7 +6,7 @@ void Game :: buildAliens() {                                                    
     const int rows = 4;                                                             //Anzahl Reihen nach unten (y)
     const int cols = 12;                                                            //Anzahl Spalten nach rechts (x)
 
-    const float startX = 100.f;                                                      //Start X Koordinate erstes Alien
+    const float startX = 100.f;                                                     //Start X Koordinate erstes Alien
     const float startY = 150.f;                                                     //Start Y Koordinate erstes Alien
 
     const float gapX = 60.f;                                                        //Abstand X zwischen zwei Aliens
@@ -45,7 +45,9 @@ void Game :: updateAliens(float dt) {                                           
         }
     }
 }
-
+//-----------------------------------
+//------------HERZ-STUECK------------
+//-----------------------------------
 void Game :: run () {
 
     sf :: Clock clock;
@@ -87,15 +89,28 @@ void Game :: run () {
 
     if (playershot.has_value() && playershot->isActive()) {                         //Schuss existiert und ist aktiv
         playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
+        
+        for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
+            if (playershot->hitbox().intersects(aliens[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
+                aliens.erase(aliens.begin() + i);                                   //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
+                playershot->deactivate();                                           //Schuss deaktivieren
+                break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
+            }
+        }
+
         if (playershot->upperLimit() < 120.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
             playershot->deactivate();                                               //Schaltet den Schuss aus 
+        }
+
+        if (aliens.empty()) {                                                       //Wenn keine Aliens mehr in dem Fenster sind
+            buildAliens();                                                          //DANN erstelle erneut eine Formation
         }
     }
 
     fenster.clear();
     player.render(fenster);                                                         //Player im Fenster zeichen
 
-    for (const Alien& a : aliens) {                                                 //a ist eine Referenz (&) auf ein Alien, welches nicht veraendert werden darf (const)
+    for (const Alien& a : aliens) {                                                 //a ist die Referenz (&) auf ein Alien, welches nicht veraendert werden darf (const)
         a.render(fenster);                                                          //a : aliens -> a bekommt nacheinander jedes Element aus aliens (Was eine Referenz von Alien ist und keine Kopie!)
     }                                                                               //Diese Referenz a in das fenster zeichnen
 
@@ -103,7 +118,7 @@ void Game :: run () {
         playershot->render(fenster);                                                //Zeichne den Schuss in das Fenster
     }                                                                               //Hier keine isActive Abfrage, weil render Active bereits kontrolliert
 
-    fenster.display();
+    fenster.display();                                                              //SFML Fenster auf dem Screen anzeigen
 
     }
 }

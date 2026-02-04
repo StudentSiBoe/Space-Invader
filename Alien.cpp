@@ -7,6 +7,9 @@ Alien :: Alien(float x, float y) {                                      //Objekt
     alien.setPosition(x, y);                                            //Position eines Aliens
 
 }
+sf :: FloatRect Alien ::  hitbox() const {                              //FloatRect...Ist ein SFML Recheck
+    return alien.getGlobalBounds();                                     //betrachtet das aktuelle Shape/rechteck und nimmt Position, Groesse und baut ein aequivalentes Rechteck dazu
+}
 
 void Alien :: render(sf :: RenderWindow&fenster) const {                //Alien auf dem Fenster zeichnen 
     fenster.draw(alien);
