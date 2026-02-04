@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-struct Alien{
+class Alien{
 
     public:
     Alien(float x, float y);
