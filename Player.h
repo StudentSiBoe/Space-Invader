@@ -9,7 +9,7 @@ class Player{
     void handleInput();                                     //Bewegungssteuerung Spielfigur
     void update(float dt, float windowWidth);
     void render(sf :: RenderWindow&fesnter);
-
+    
     //Erweiterungen Methode - Schuss
     bool shotRequest() const;
     void processShotRequest();

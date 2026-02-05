@@ -25,6 +25,11 @@ class Game {
 
     void updateAliens(float dt);            //Updated die Position der Aliens
 
+    const float loseLineY = player.spielerPosY;
+
+    int playerLivesAmount = 3;              //Anzahl Leben fuer Spieler
+    bool gameOverStatus = false;            //Status Gameover
+
     //Display - Score + Text
     int score = 0;                          //Aktueller Punktestand
     const int scorePointsAlien = 20;        //Punkte pro Treffer
@@ -33,5 +38,6 @@ class Game {
     sf :: Font font;                        //Textart anlegen
     sf :: Text gameName;                    //Textfeld fuer Titel definieren
     sf :: Text scoreBoard;                  //Textfeld fuer Punktestand definieren
-    sf :: Text playerLives;                 ////Textfeld fuer Leben definieren
+    sf :: Text playerLives;                 //Textfeld fuer Leben definieren
+    sf :: Text gameOverText;                //Textfeld bei Gameover
 };

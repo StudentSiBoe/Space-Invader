@@ -14,7 +14,8 @@ class Alien{
     void move(float dx, float dy);
     float left() const;
     float right() const;
-
+    float bottom() const;
+    
     private:
     sf :: RectangleShape alien;
 };

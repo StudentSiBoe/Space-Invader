@@ -62,8 +62,13 @@ void Game :: initDisplay() {                                                    
 
     playerLives.setFont(font);                                                      //Textart zuweisen
     playerLives.setCharacterSize(45);                                               //Textgroesse definieren
-    playerLives.setString("LIVES: ---");
+    
     playerLives.setFillColor(sf :: Color :: Yellow);                                //Textfarbe definieren
+
+    gameOverText.setFont(font);                                                     //Textart zuweisen                             
+    gameOverText.setCharacterSize(150);                                             //Textgroesse definieren       
+    gameOverText.setString("GAME OVER");                                            //Text definieren
+    gameOverText.setFillColor(sf :: Color :: Red);                                  //Textfarbe definieren
 
     updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung
 }
@@ -72,14 +77,19 @@ void Game :: updateDisplay() {                                                  
     scoreBoard.setString("SCORE: " + std :: to_string(score));                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
     scoreBoard.setPosition(10.f, 10.f);                                             //Position fuer Score definieren (x,y)
 
-    float fensterBreite = static_cast<float>(fenster.getSize().x);                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln)
+    playerLives.setString("LIVES: " + std :: to_string(playerLivesAmount));         //Playerleben mit der int Variable anzeigen
 
-    auto titel = gameName.getLocalBounds();                                         //Mase des Text-Rechtecks 
+    float fensterBreite = static_cast<float>(fenster.getSize().x);                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln)
+    float fensterHoehe = static_cast<float>(fenster.getSize().y);
+
+    auto titel = gameName.getLocalBounds();                                         //Mase des Text-Rechtecks title
     gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left, 5.f);    //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
 
-    auto livePoints = playerLives.getLocalBounds();                                 //Mase des Text-Rechtecks 
-    playerLives.setPosition(fensterBreite - livePoints.width - 10.f - livePoints.left, 10.f);   //10.f = Abstand zum Rand (fuer die Optik)
+    auto lP = playerLives.getLocalBounds();                                         //Mase des Text-Rechtecks player
+    playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);       //10.f = Abstand zum Rand (fuer die Optik)
 
+    auto gOver = gameOverText.getLocalBounds();                                    //Mase des Text-Rechtecks gameOver
+    gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top);    //Position fuer GameOver Textfeld mittig auf Fenster anzeigen
 }
 //-----------------------------------
 //------------HERZ-STUECK------------
@@ -110,56 +120,71 @@ void Game :: run () {
     //Spiel laeuft mit vorgegebenen 60 fps -> dt (Zeit zwischen e Frames) = ca. 0,02sec -> dt = 0,02s
     //Im Player: spieler.move(direction * speed * dt, 0.f); == Bewegung des Players in einem Frame
 
-    //Eingaben vom Player bzw. Bewegungssteuerung
-    player.handleInput();                                                           
+    if (!gameOverStatus) {
+        //Eingaben vom Player bzw. Bewegungssteuerung
+        player.handleInput();                                                           
     
-    //Schuss Abfrage (es kann nur einen Schuss geben)
-    if (player.shotRequest()) {                                                     //Wenn Space-Taste gedrueckt, shotRequest gibt true zurueck
-        if(!playershot.has_value() || !playershot->isActive()) {                    //Wenn kein Schuss existiert (has_value) ODER kein Schuss aktiviert (noch fliegt/isActive) ist
-            sf :: Vector2f pos = player.shotStartPosition();                        //Neue Start-Pos fuer neuen Schuss ermitteln
-            playershot = Shot(pos.x, pos.y);                                        //Neuen Shot dort erzeugen...
+        //Schuss Abfrage (es kann nur einen Schuss geben)
+        if (player.shotRequest()) {                                                     //Wenn Space-Taste gedrueckt, shotRequest gibt true zurueck
+            if(!playershot.has_value() || !playershot->isActive()) {                    //Wenn kein Schuss existiert (has_value) ODER kein Schuss aktiviert (noch fliegt/isActive) ist
+                sf :: Vector2f pos = player.shotStartPosition();                        //Neue Start-Pos fuer neuen Schuss ermitteln
+                playershot = Shot(pos.x, pos.y);                                        //Neuen Shot dort erzeugen...
+            }
+            player.processShotRequest();                                                //Nach dem Schuss wird der Schussaufruf wieder auf false gesetzt
         }
-        player.processShotRequest();                                                //Nach dem Schuss wird der Schussaufruf wieder auf false gesetzt
-    }
 
-    player.update(dt, static_cast<float>(fenster.getSize().x));                     //deltaTime und Breite des Feldes uebergeben an Positionspruefung 
-    updateAliens(dt);                                                               //Aufruf Alien update Methode mit delta Time
+        player.update(dt, static_cast<float>(fenster.getSize().x));                     //deltaTime und Breite des Feldes uebergeben an Positionspruefung 
+        updateAliens(dt);                                                               //Aufruf Alien update Methode mit delta Time
 
-    if (playershot.has_value() && playershot->isActive()) {                         //Schuss existiert und ist aktiv
-        playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
+        if (playershot.has_value() && playershot->isActive()) {                         //Schuss existiert und ist aktiv
+            playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
         
-        for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
-            if (playershot->hitbox().intersects(aliens[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
-                aliens.erase(aliens.begin() + i);                                   //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
-                playershot->deactivate();                                           //Schuss deaktivieren
-                score += scorePointsAlien;
-                updateDisplay();
-                break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
+            for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
+                if (playershot->hitbox().intersects(aliens[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
+                    aliens.erase(aliens.begin() + i);                                   //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
+                    playershot->deactivate();                                           //Schuss deaktivieren
+                    score += scorePointsAlien;
+                    updateDisplay();
+                    break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
+                }
+            }
+
+            if (playershot->upperLimit() < 120.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
+                playershot->deactivate();                                               //Schaltet den Schuss aus 
+            }            
+
+            if (aliens.empty()) {                                                       //Wenn keine Aliens mehr in dem Fenster sind
+                buildAliens();                                                          //DANN erstelle erneut eine Formation
             }
         }
-
-        if (playershot->upperLimit() < 120.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
-            playershot->deactivate();                                               //Schaltet den Schuss aus 
-        }
-
-        if (aliens.empty()) {                                                       //Wenn keine Aliens mehr in dem Fenster sind
-            buildAliens();                                                          //DANN erstelle erneut eine Formation
-        }
     }
 
+    for (const Alien& a : aliens) {
+        if (a.bottom() >= loseLineY) {
+            gameOverStatus = true;
+            break;
+        }
+    }
+    
     fenster.clear();
     player.render(fenster);                                                         //Player im Fenster zeichen
 
     for (const Alien& a : aliens) {                                                 //a ist die Referenz (&) auf ein Alien, welches nicht veraendert werden darf (const)
         a.render(fenster);                                                          //a : aliens -> a bekommt nacheinander jedes Element aus aliens (Was eine Referenz von Alien ist und keine Kopie!)
     }                                                                               //Diese Referenz a in das fenster zeichnen
-
+    
     if (playershot.has_value()) {                                                   //Wenn gerade einen Shot existiert, DANN
         playershot->render(fenster);                                                //Zeichne den Schuss in das Fenster
+    
     }                                                                               //Hier keine isActive Abfrage, weil render Active bereits kontrolliert
     fenster.draw(playerLives);
     fenster.draw(gameName);
     fenster.draw(scoreBoard);
+
+    if (gameOverStatus) {
+        fenster.draw(gameOverText);
+    }
+
     fenster.display();                                                              //SFML Fenster auf dem Screen anzeigen
 
     }
