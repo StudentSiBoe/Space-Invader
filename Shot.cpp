@@ -1,11 +1,10 @@
 #include "Shot.h"
 
-Shot :: Shot(float AbX, float AbY) {                            //Objekt Schuss erzeugen
+Shot :: Shot(float abX, float abY) {                            //Objekt Schuss erzeugen
     
     schuss.setSize({6.f, 16.f});                                //Schuss Groesse definieren
     schuss.setFillColor(sf :: Color :: Red);                    //Schuss Farbe definieren
-
-    schuss.setPosition(AbX, AbY);                               //Schuss Startposition definieren
+    schuss.setPosition(abX, abY);                               //Schuss Startposition definieren
 
     speed = 650.f;                                              //Schuss Geschwindigkeit definieren
     active = true;                                              //Schuss Ja oder Nein

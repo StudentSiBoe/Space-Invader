@@ -23,7 +23,7 @@ void Player :: handleInput() {
     }
     //Schuss - Player
     if (sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: Space)) {  //Bei Eingabe Space
-        shotStatus = true;                                       //Schussanforderung true setzen
+        shotStatus = true;                                          //Schussanforderung true setzen
     }
 }
 

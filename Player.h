@@ -2,8 +2,8 @@
 #include <SFML/Graphics.hpp>
 
 class Player{
-    public:
     
+    public:
     Player();
     float spielerPosY = 870.f;
     void handleInput();                                     //Bewegungssteuerung Spielfigur

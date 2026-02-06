@@ -4,7 +4,7 @@
 class Shot{
 
     public:
-    Shot(float AbX, float AbY);
+    Shot(float abX, float abY);
 
     void update(float dt);
     void render(sf :: RenderWindow&fenster) const;
