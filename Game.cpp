@@ -5,14 +5,14 @@
 void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
     aliens.clear();                                                                 //Erstmal aufräumen
 
-    const int rows = 4;                                                             //Anzahl Reihen nach unten (y)
-    const int cols = 12;                                                            //Anzahl Spalten nach rechts (x)
+    const int rows = 5;                                                             //Anzahl Reihen nach unten (y)
+    const int cols = 11;                                                            //Anzahl Spalten nach rechts (x)
 
-    const float startX = 100.f;                                                     //Start X Koordinate erstes Alien
-    const float startY = 150.f;                                                     //Start Y Koordinate erstes Alien
+    const float startX = 120.f;                                                     //Start X Koordinate erstes Alien
+    const float startY = 140.f;                                                     //Start Y Koordinate erstes Alien
 
-    const float gapX = 60.f;                                                        //Abstand X zwischen zwei Aliens
-    const float gapY = 60.f;                                                        //Abstand Y zwischen zwei Aliens
+    const float gapX = 65.f;                                                        //Abstand X zwischen zwei Aliens
+    const float gapY = 65.f;                                                        //Abstand Y zwischen zwei Aliens
 
     for (int i = 0; i < rows; i++) {                                                //Schleife - Reihen durchlaufen 
         for (int j = 0; j < cols; j++) {                                            //Schleife - Spalten durchgehen 

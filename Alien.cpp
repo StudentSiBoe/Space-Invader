@@ -2,7 +2,7 @@
 
 Alien :: Alien(float x, float y) {                                     //Objekt Alien erzeugen
 
-   alien.setSize({40.f, 40.f});                                        //Groesse eines Aliens definieren
+   alien.setSize({45.f, 45.f});                                        //Groesse eines Aliens definieren
    alien.setFillColor(sf :: Color :: White);                           //Farbe eines Aliens definieren
    alien.setPosition(x, y);                                            //Position eines Aliens
 
