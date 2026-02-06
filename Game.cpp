@@ -93,31 +93,31 @@ void Game :: updateDisplay() {                                                  
 }
 
 void Game :: tryAlienShoot(float dt) {
-    if (aliens.empty() || alienShootTimer < alienShootInterval || (alienShot.has_value() && alienShot->isActive())) return;
+    alienShootTimer += dt;                                                          //Timer erhoehen in jedem Frame
 
-    alienShootTimer += dt;
+    if (aliens.empty()                                                              //Wenn es keine Aliens mehr auf dem Feld gibt 
+    || alienShootTimer < alienShootInterval                                         //ODER Zeit bis naechster Schuss noch nicht erreicht
+    || (alienShot.has_value() && alienShot->isActive())) return;                    //ODER ein AlienSchuss existiert und fliegt noch -> DANN return
 
-    srand((unsigned) time(NULL));
-    int randomNum = rand() % aliens.size() - 1;
+    int randomNum = rand() % aliens.size();                                         //Random Alien (Zahl) aus zufallsfolge ermitteln, mit hilfe vom aktuelle Seed
 
-   // std :: uniform_int_distribution<size_t> dist(0, aliens.size() - 1);
-   // size_t idx = dist(rng);
-
-    sf :: FloatRect alienHitbox = aliens[randomNum].hitbox();
-    float x = alienHitbox.left + alienHitbox.width / 2.f - 5.f;                     //Mitte der Alien-Hitbox - halber Schuss
-    float y = alienHitbox.top + alienHitbox.height;
+    sf :: FloatRect alienHitbox = aliens[randomNum].hitbox();                       //Hitbox des Random-ausgewaehlten Aliens ermitteln
+    
+    float x = alienHitbox.left + alienHitbox.width / 2.f - 5.f;                     //Mitte der Alien-Hitbox - halber Schuss fuer Abfeuerkoordinate X
+    float y = alienHitbox.top + alienHitbox.height;                                 //untere Alienkante der Alien-Hitbox fuer Abfeuerkoordinate Y
 
     alienShot = AlienShot(x, y);                                                    //Abschuss-Positions Koordinaten uebergeben
     
-    alienShootTimer = 0.f;
-    std :: uniform_real_distribution<float> tdist(0.8f, 1.6f);
-    alienShootInterval = tdist(rng);
+    alienShootTimer = 0.f;                                                          //Wenn Zeit fuer neuer Schuss erreicht UND neuer Schuss wird erzeugt -> Reset Timer
+    
+    alienShootInterval = 0.9f + static_cast<float>(rand()) / RAND_MAX * 1.2f;       //Die Zufallszahl wird mit RAND_MAX
 
 }
 //-----------------------------------
 //------------HERZ-STUECK------------
 //-----------------------------------
 void Game :: run () {
+    srand(static_cast<unsigned int>(time(nullptr)));                                //Start der Zufallsfolge setzen (seed) fuer rand(), time gibt aktuelle Zeit (time) -> cast in int (fuer srand)                        
 
     sf :: Clock clock;
     
@@ -131,7 +131,7 @@ void Game :: run () {
         sf :: Event event;                                                          //Variable event zum abfangen von befehlen
 
         while (fenster.pollEvent(event)) {                                          //Holt alle Infos aus Event
-            if (event.type == sf :: Event :: Closed) {                                //Bei Anwahl X Fenster schliessen
+            if (event.type == sf :: Event :: Closed) {                              //Bei Anwahl X Fenster schliessen
                 fenster.close();
             }
         }

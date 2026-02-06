@@ -27,17 +27,17 @@ class Game {
 
    // std :: random_device randomNum;
    // std :: mt19937 rng(randomNum());
-    srand((unsigned) time(NULL));
-    std :: mt19937 rng{std :: random_device{}()};   //Zufallsgenerator
+    
+   //std :: mt19937 rng{std :: random_device{}()};   //Zufallsgenerator
 
     std :: vector<Alien> aliens;
     void buildAliens();                     //Methode zum Aufbau der Alienreihen
     void updateAliens(float dt);            //Updated die Position der Aliens
 
-    float alienShootTimer = 0.f;                    //???
-    float alienShootInterval = 1.2f;                //???
+    float alienShootTimer = 0.f;            //vergangene Zeit nach jedem Schuss 
+    float alienShootInterval = 1.2f;        //Alien Schuss Intervall (alle ... Sekunden schiessen)
 
-    void tryAlienShoot(float dt);                   //???
+    void tryAlienShoot(float dt);           //Alien Schuss Berechnung und Freigaben zum schiessen testen
 
     int playerLivesAmount = 3;              //Anzahl Leben fuer Spieler
     bool gameOverStatus = false;            //Status Gameover
