@@ -1,0 +1,14 @@
+# Compiler-Ausgaben
+*.o
+*.exe
+*.obj
+*.dll
+
+# CMake-Ordner und Cache
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+# VS Code Einstellungen
+.vscode/
