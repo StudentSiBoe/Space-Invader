@@ -57,3 +57,7 @@ sf :: Vector2f Player :: shotStartPosition() const {                //Startpunkt
     float y = spieler.getPosition().y - 18.f;                                   //Y-Koordinate Ab der oberseite des Spielers
     return{x, y};                                                               //Werte uebergeben
 }
+
+sf :: FloatRect Player ::hitbox() const {
+    return spieler.getGlobalBounds();
+}

@@ -15,6 +15,8 @@ class Player{
     void processShotRequest();
     sf :: Vector2f shotStartPosition() const;
 
+    sf :: FloatRect hitbox() const;
+    
     private:
     sf :: RectangleShape spieler;                           //Zum anlegen der Spieler Eigenschaften
     float speed;

@@ -110,8 +110,8 @@ void Game :: tryAlienShoot(float dt) {
     
     alienShootTimer = 0.f;                                                          //Wenn Zeit fuer neuer Schuss erreicht UND neuer Schuss wird erzeugt -> Reset Timer
     
-    alienShootInterval = 0.9f + static_cast<float>(rand()) / RAND_MAX * 1.2f;       //Die Zufallszahl wird mit RAND_MAX
-
+    alienShootInterval = 0.9f + static_cast<float>(rand()) / RAND_MAX * 1.2f;       //Die Zufallszahl wird mit rand() von 0 bis RAND_MAX erzeugt... Normieren durch / -> 0..1 + &* -> 0,9 bis 2.1
+                                                                                    //Schuss ist nicht vorhersehbar, macht Spiel schwerer (kein Muster)
 }
 //-----------------------------------
 //------------HERZ-STUECK------------
@@ -184,10 +184,20 @@ void Game :: run () {
             }    
         }   
     
-        if (alienShot.has_value() && alienShot->isActive()) {                               //?????
+        if (alienShot.has_value() && alienShot->isActive()) {      
             alienShot->update(dt);
+
             if (alienShot->lowerLimit() > static_cast<float>(fenster.getSize().y)) {
                 alienShot->deactivate();
+
+            } else if (alienShot->hitbox().intersects(player.hitbox())) {
+                alienShot->deactivate();
+                playerLivesAmount -= 1;
+                updateDisplay();
+
+                if (playerLivesAmount <= 0) {
+                    gameOverStatus = true;
+                }
             }
         }
 
@@ -243,4 +253,6 @@ void Game :: run () {
             shotRequested = true;
         }
     }
+
+      
 */

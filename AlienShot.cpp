@@ -29,7 +29,7 @@ void AlienShot :: deactivate() {                                            //Sc
 }
 
 float AlienShot :: lowerLimit() const {                                     //Fuer den Vergleich der aktuellen Pos-Y mit dem oberen Limit
-    return alienschuss.getPosition().y;
+    return alienschuss.getPosition().y + alienschuss.getSize().y;
 }
 
 sf :: FloatRect AlienShot :: hitbox() const {                               //FloatRect...Ist ein SFML Recheck
