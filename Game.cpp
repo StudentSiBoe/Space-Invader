@@ -202,6 +202,13 @@ void Game :: run () {
 
                 if (playerLivesAmount <= 0) {                                           //Check ob Spieler noch Leben hat
                     gameOverStatus = true;                                              //Wenn nicht -> Gameover
+                    invincible = true;                                                  //Unverwundbarkeitsphase an
+                    invincibleTimer = 0.f;                                              //Unverwundbarkeitszeit startet
+
+                    blinkTimer = 0.f;                                                   //Blink Zeit startet
+                    blinkOn = true;                                                     //blinken an
+                    player.setHitVisual(blinkOn);                                       //Methode zum blinken aufrufen mit true
+                    
                 } else {                                                            //TREFFER Anzeige
                     hitPause = true;                                                    //ANSONSTEN Stopp/stehen an (Player bleibt stehen)
                     hitPauseTimer = 0.f;                                                //Start Standzeit
