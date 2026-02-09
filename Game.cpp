@@ -129,9 +129,9 @@ void Game :: run () {
 
     while (fenster.isOpen()) {                                                      //Feedback vom fenster (es existiert)
         sf :: Event event;                                                          //Variable event zum abfangen von befehlen
-                                                                                    // Oeffnet Fenster, Bleibt offen bis Befehl - Schliessen kommt(oben rechts X)
-        while (fenster.pollEvent(event)) {                                          //Holt alle Infos aus Event
-            if (event.type == sf :: Event :: Closed) {                              //Bei Anwahl X Fenster schliessen
+                                                                                    
+        while (fenster.pollEvent(event)) {                                          //Holt das naechste Event aus Warteschlange und schreibt es in event
+            if (event.type == sf :: Event :: Closed) {                              //Bei Anwahl x Fenster schliessen
                 fenster.close();
             }
         }
