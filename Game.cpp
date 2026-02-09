@@ -3,7 +3,7 @@
 #include <string>
 
 //Highscore Boe: 4180
-//Highscore Simon: 
+//Highscore Simon: 2180
 
 void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
     aliens.clear();                                                                 //Erstmal aufräumen
