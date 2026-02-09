@@ -17,6 +17,8 @@ class Player{
 
     sf :: FloatRect hitbox() const;
     
+    void setHitVisual(bool on);
+    
     private:
     sf :: RectangleShape spieler;                           //Zum anlegen der Spieler Eigenschaften
     float speed;

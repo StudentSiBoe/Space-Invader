@@ -22,28 +22,34 @@ class Game {
     private:
     sf :: RenderWindow fenster{sf :: VideoMode(900, 900), "Space Invaders"};    //Erstellung Fenster in Groesse (x, y)
     Player player;
+    std :: vector<Alien> aliens;
     std :: optional<Shot> playershot;       //Im Player kann es einen Shot geben, muss es aber nicht...Daher spaetere Kontrollen
     std :: optional<AlienShot> alienShot;   //Es gibt vielleicht einen Alien Schuss muss es aber nicht... Wie playershot
 
-   // std :: random_device randomNum;
-   // std :: mt19937 rng(randomNum());
-    
-   //std :: mt19937 rng{std :: random_device{}()};   //Zufallsgenerator
-
-    std :: vector<Alien> aliens;
     void buildAliens();                     //Methode zum Aufbau der Alienreihen
     void updateAliens(float dt);            //Updated die Position der Aliens
 
+    void tryAlienShoot(float dt);           //Alien Schuss Berechnung und Freigaben zum schiessen testen
     float alienShootTimer = 0.f;            //vergangene Zeit nach jedem Schuss 
     float alienShootInterval = 1.2f;        //Alien Schuss Intervall (alle ... Sekunden schiessen)
 
-    void tryAlienShoot(float dt);           //Alien Schuss Berechnung und Freigaben zum schiessen testen
+    //Trefferanzeige - Spieler 
+    bool hitPause = false;
+    float hitPauseTimer = 0.f;
+    const float hitPauseFreeze = 2.5f;
 
-    int playerLivesAmount = 3;              //Anzahl Leben fuer Spieler
-    bool gameOverStatus = false;            //Status Gameover
+    bool invincible = false;
+    float invincibleTimer = 0.f;
+    const float invincibleFreeze = 2.5f;
+
+    float blinkTimer = 0.f;
+    const float blinkInterval = 0.15f;
+    bool blinkOn = false;
 
     //Display - Score + Text
     int score = 0;                          //Aktueller Punktestand
+    int playerLivesAmount = 3;              //Anzahl Leben fuer Spieler
+    bool gameOverStatus = false;            //Status Gameover
     const int scorePointsAlien = 20;        //Punkte pro Treffer
     void updateDisplay();                   //Aktualisierung des Angezeigten Punktestands
     void initDisplay();                     //Definieren der Texteigenschaften

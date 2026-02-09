@@ -7,7 +7,7 @@ Shot :: Shot(float abX, float abY) {                            //Objekt Schuss 
     schuss.setPosition(abX, abY);                               //Schuss Startposition definieren
 
     speed = 650.f;                                              //Schuss Geschwindigkeit definieren
-    active = true;                                              //Schuss Ja oder Nein
+    active = true;                                              //Schuss Ja, existiert ein Objekt dieser Klasse ist dieser autom. aktiv
 }
 
 void Shot :: update(float dt) {

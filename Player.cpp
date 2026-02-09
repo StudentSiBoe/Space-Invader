@@ -1,15 +1,15 @@
 #include "Player.h"
 
-Player :: Player() {                                            //Objekt Spieler erzeugen
+Player :: Player() {                                                //Objekt Spieler erzeugen
 
-    spieler.setSize({60.f, 30.f});                              //Spielerfigur Groesse definieren
-    spieler.setFillColor(sf :: Color :: Green);                //Spielerfigut Farbe definieren
-    spieler.setPosition(420.f, spielerPosY);                    //Position des Spielers definieren
+    spieler.setSize({60.f, 30.f});                                  //Spielerfigur Groesse definieren
+    spieler.setFillColor(sf :: Color :: Green);                     //Spielerfigut Farbe definieren
+    spieler.setPosition(420.f, spielerPosY);                        //Position des Spielers definieren
 
-    speed = 550.f;                                              //Bewegungsgeschwindigkeit [Pixel pro Sekunde]
+    speed = 550.f;                                                  //Bewegungsgeschwindigkeit [Pixel pro Sekunde]
     direction = 0.f;
 
-    shotStatus = false;                                      //Schuss nur bei Tasteneindruck
+    shotStatus = false;                                             //Schuss nur bei Tasteneindruck
 }
 
 void Player :: handleInput() {
@@ -54,10 +54,18 @@ void Player :: processShotRequest() {                               //Nach einem
 
 sf :: Vector2f Player :: shotStartPosition() const {                //Startpunkt fuer Schuss-Animation definieren
     float x = spieler.getPosition().x + spieler.getSize().x / 2.f - 3.f;        //X-Koordinate Ab da wo der Spieler ist + halbe Breite und halbem Schuss
-    float y = spieler.getPosition().y - 18.f;                                   //Y-Koordinate Ab der oberseite des Spielers
+    float y = spieler.getPosition().y - spieler.getSize().y + 16.f;                                   //Y-Koordinate Ab der oberseite des Spielers
     return{x, y};                                                               //Werte uebergeben
 }
 
 sf :: FloatRect Player ::hitbox() const {
     return spieler.getGlobalBounds();
+}
+
+void Player :: setHitVisual(bool on) {
+    if (on) {
+        spieler.setFillColor(sf :: Color :: Red);
+    } else {
+        spieler.setFillColor(sf :: Color :: Green);
+    }
 }

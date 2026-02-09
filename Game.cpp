@@ -25,7 +25,7 @@ void Game :: buildAliens() {                                                    
 
 void Game :: updateAliens(float dt) {                                               //Positions Aktualisierung der Aliens
     float moveX = alienDirection * alienSpeed * dt;                                 //Bewegung in X-Richtung (Bestehend aus Richtung, Geschwindigkeit und delta Time)
-    bool border = false;                                                            //Grenze des Fensters anlegen (Bewegungsradius)
+    bool border = false;                                                            //Grenze des Fensters anlegen (Bewegungsgrenze)
 
     for (const Alien& a : aliens) {
         if (alienDirection > 0 && a.right() >= fenster.getSize().x) {               //Alienbewegung nach rechts (Direction +) UND rechte Kante des Aliens ist an / ueber der Fenstergroesse (rechte Kante)
@@ -127,23 +127,27 @@ void Game :: run () {
 
     buildAliens();                                                                  //Aufruf - Bau Alien-Reihen
 
-    while (fenster.isOpen()) {
+    while (fenster.isOpen()) {                                                      //Feedback vom fenster (es existiert)
         sf :: Event event;                                                          //Variable event zum abfangen von befehlen
-
+                                                                                    // Oeffnet Fenster, Bleibt offen bis Befehl - Schliessen kommt(oben rechts X)
         while (fenster.pollEvent(event)) {                                          //Holt alle Infos aus Event
             if (event.type == sf :: Event :: Closed) {                              //Bei Anwahl X Fenster schliessen
                 fenster.close();
             }
         }
     
-        // Oeffnet Fenster, Bleibt offen bis Befehl - Schliessen kommt(oben rechts X), dann clear und löschen
-    
-        float dt = clock.restart().asSeconds();                                         //dt berechnen 
+        float dt = clock.restart().asSeconds();                                     //dt berechnen 
         //SFML Stoppuhr - clock.restart(), Gibt die Zeit seid dem letztem Restart zurück und .asSeconds() wandelt die Zeit in Sekunden um                                         
         //Spiel laeuft mit vorgegebenen 60 fps -> dt (Zeit zwischen e Frames) = ca. 0,02sec -> dt = 0,02s
         //Im Player: spieler.move(direction * speed * dt, 0.f); == Bewegung des Players in einem Frame
+        if (hitPause) {
+            hitPauseTimer += dt;
+            if (hitPauseTimer >= hitPauseFreeze) {
+                hitPause = false;
+            } 
+        }
 
-        if (!gameOverStatus) {
+        if (!gameOverStatus && !hitPause) {
             //Eingaben vom Player bzw. Bewegungssteuerung
             player.handleInput();                                                           
     
@@ -187,28 +191,53 @@ void Game :: run () {
         if (alienShot.has_value() && alienShot->isActive()) {      
             alienShot->update(dt);
 
-            if (alienShot->lowerLimit() > static_cast<float>(fenster.getSize().y)) {
+            if (alienShot->lowerLimit() > static_cast<float>(fenster.getSize().y)) {    //Schuss verlässt Spielfeld / ueber Fenstergroesse hinaus
                 alienShot->deactivate();
 
-            } else if (alienShot->hitbox().intersects(player.hitbox())) {
+            } else if (alienShot->hitbox().intersects(player.hitbox())) {               //Treffer am Spieler registriert
                 alienShot->deactivate();
-                playerLivesAmount -= 1;
-                updateDisplay();
+                playerLivesAmount -= 1;                                                 //Spielerleben um 1 verringern
+                updateDisplay();                                                        //Display / Lebensanzeige aktualisieren
 
-                if (playerLivesAmount <= 0) {
-                    gameOverStatus = true;
+                if (playerLivesAmount <= 0) {                                           //Check ob Spieler noch Leben hat
+                    gameOverStatus = true;                                              //Wenn nicht -> Gameover
+                } else {
+                    hitPause = true;
+                    hitPauseTimer = 0.f;
+
+                    invincible = true;
+                    invincibleTimer = 0.f;
+
+                    blinkTimer = 0.f;
+                    blinkOn = true;
+                    player.setHitVisual(true);
                 }
             }
         }
 
-        for (const Alien& a : aliens) {
+        for (const Alien& a : aliens) {                                                 //Kontrolle, erreicht ein Alien (alle Aliens) den Spieler
             float loseLineY = player.spielerPosY;                                       //Linie auf Hoehe des Spielers um Gameover zu ermitteln
             if (a.bottom() >= loseLineY) {
-                gameOverStatus = true;
+                gameOverStatus = true;                                                  //Alien erreicht Spielerhoehe -> Gameover
                 break;
             }
         }
-    
+        
+        if (invincible) {
+            invincibleTimer += dt;
+            blinkTimer += dt;
+
+            if (blinkTimer >= blinkInterval) {
+                blinkTimer = 0.f;
+                blinkOn = !blinkOn;
+                player.setHitVisual(blinkOn);
+            }
+            if (invincibleTimer >= invincibleFreeze) {
+                invincible = false;
+                player.setHitVisual(invincible);
+            }
+        }
+
         fenster.clear();
         player.render(fenster);                                                         //Player im Fenster zeichen
 
@@ -216,12 +245,12 @@ void Game :: run () {
             a.render(fenster);                                                          //a : aliens -> a bekommt nacheinander jedes Element aus aliens (Was eine Referenz von Alien ist und keine Kopie!)
         }                                                                               //Diese Referenz a in das fenster zeichnen
     
-        if (playershot.has_value()) {                                                   //Wenn gerade einen Shot existiert, DANN
+        if (playershot.has_value()) {                                                   //Wenn gerade einen Shot vom Spieler existiert, DANN
             playershot->render(fenster);                                                //Zeichne den Schuss in das Fenster
     
         }                                                                               //Hier keine isActive Abfrage, weil render Active bereits kontrolliert
-        if (alienShot.has_value()) {
-            alienShot->render(fenster);
+        if (alienShot.has_value()) {                                                    //Wenn gerade einen Shot vom Spieler existiert, DANN                                                                             
+            alienShot->render(fenster);                                                 //Zeichne den Schuss in das Fenster
         }
 
         fenster.draw(playerLives);
