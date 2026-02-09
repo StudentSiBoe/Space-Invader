@@ -34,17 +34,17 @@ class Game {
     float alienShootInterval = 1.2f;        //Alien Schuss Intervall (alle ... Sekunden schiessen)
 
     //Trefferanzeige - Spieler 
-    bool hitPause = false;
-    float hitPauseTimer = 0.f;
-    const float hitPauseFreeze = 2.5f;
+    bool hitPause = false;                  //Variable bei getroffen werden            
+    float hitPauseTimer = 0.f;              //gestoppte Zeit als Timer
+    const float hitPauseStop = 2.5f;        //Pausezeit bei Treffer
 
-    bool invincible = false;
-    float invincibleTimer = 0.f;
-    const float invincibleFreeze = 2.5f;
+    bool invincible = false;                //Variable zum unverwundbar werden
+    float invincibleTimer = 0.f;            //gestoppte Zeit fuer Unverwundbarkeit
+    const float invincibleStop = 2.5f;      //Unverwundbarkeitszeitraum bei Treffer
 
-    float blinkTimer = 0.f;
-    const float blinkInterval = 0.15f;
-    bool blinkOn = false;
+    float blinkTimer = 0.f;                 //getoppte Zeit zwischen Farbwechseln
+    const float blinkInterval = 0.15f;      //Zeit bis Farbwechsel
+    bool blinkOn = false;                   //Variable zum einschalten des blinkens
 
     //Display - Score + Text
     int score = 0;                          //Aktueller Punktestand

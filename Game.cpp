@@ -140,16 +140,17 @@ void Game :: run () {
         //SFML Stoppuhr - clock.restart(), Gibt die Zeit seid dem letztem Restart zurück und .asSeconds() wandelt die Zeit in Sekunden um                                         
         //Spiel laeuft mit vorgegebenen 60 fps -> dt (Zeit zwischen e Frames) = ca. 0,02sec -> dt = 0,02s
         //Im Player: spieler.move(direction * speed * dt, 0.f); == Bewegung des Players in einem Frame
-        if (hitPause) {
-            hitPauseTimer += dt;
-            if (hitPauseTimer >= hitPauseFreeze) {
-                hitPause = false;
+
+        if (hitPause) {                                                             //Trefferpause ist aktiv, dann
+            hitPauseTimer += dt;                                                    //Stoppt alles und zählt die Zeit zwischen den Frames hoch, bis:
+            if (hitPauseTimer >= hitPauseStop) {                                    //Timer Zeit = vorgegebenen Stoppzeit
+                hitPause = false;                                                   //Pause aufloesen
             } 
         }
 
-        if (!gameOverStatus && !hitPause) {
-            //Eingaben vom Player bzw. Bewegungssteuerung
-            player.handleInput();                                                           
+        if (!gameOverStatus && !hitPause) {                                                 //Spiel laeuft, wenn kein Gameover oder Treffer am Spieler
+            
+            player.handleInput();                                                           //Eingaben vom Player bzw. Bewegungssteuerung                                                           
     
             //Schuss Abfrage (es kann nur einen Schuss geben)
             if (player.shotRequest()) {                                                     //Wenn Space-Taste gedrueckt, shotRequest gibt true zurueck
@@ -201,16 +202,16 @@ void Game :: run () {
 
                 if (playerLivesAmount <= 0) {                                           //Check ob Spieler noch Leben hat
                     gameOverStatus = true;                                              //Wenn nicht -> Gameover
-                } else {
-                    hitPause = true;
-                    hitPauseTimer = 0.f;
+                } else {                                                            //TREFFER Anzeige
+                    hitPause = true;                                                    //ANSONSTEN Stopp/stehen an (Player bleibt stehen)
+                    hitPauseTimer = 0.f;                                                //Start Standzeit
 
-                    invincible = true;
-                    invincibleTimer = 0.f;
+                    invincible = true;                                                  //Unverwundbarkeitsphase an
+                    invincibleTimer = 0.f;                                              //Unverwundbarkeitszeit startet
 
-                    blinkTimer = 0.f;
-                    blinkOn = true;
-                    player.setHitVisual(true);
+                    blinkTimer = 0.f;                                                   //Blink Zeit startet
+                    blinkOn = true;                                                     //blinken an
+                    player.setHitVisual(blinkOn);                                       //Methode zum blinken aufrufen mit true
                 }
             }
         }
@@ -223,18 +224,18 @@ void Game :: run () {
             }
         }
         
-        if (invincible) {
-            invincibleTimer += dt;
-            blinkTimer += dt;
+        if (invincible) {                                                               //Wenn unverwundbar, dann
+            invincibleTimer += dt;                                                      //Timer hochzaehlen fuer unverwundbar sein
+            blinkTimer += dt;                                                           //Timer hochzaehlen fuer blinken
 
-            if (blinkTimer >= blinkInterval) {
-                blinkTimer = 0.f;
-                blinkOn = !blinkOn;
-                player.setHitVisual(blinkOn);
+            if (blinkTimer >= blinkInterval) {                                          //Wenn Zei zum blinken/Farbwechsel erreicht
+                blinkTimer = 0.f;                                                       //Timer zuruecksetzen
+                blinkOn = !blinkOn;                                                     //Blink-Status negieren
+                player.setHitVisual(blinkOn);                                           //Methode zum blinken/Farbwechsel tauschen
             }
-            if (invincibleTimer >= invincibleFreeze) {
-                invincible = false;
-                player.setHitVisual(invincible);
+            if (invincibleTimer >= invincibleStop) {                                    //Wenn Unverwundbarkeitszeit abgelaufen, dann
+                invincible = false;                                                     //unverwundbarkeit wieder aus
+                player.setHitVisual(invincible);                                        //Ausgangsfarbe wieder einstellen
             }
         }
 
