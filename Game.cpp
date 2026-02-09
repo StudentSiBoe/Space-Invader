@@ -2,6 +2,9 @@
 #include <iostream>
 #include <string>
 
+//Highscore Boe: 4180
+//Highscore Simon: 
+
 void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
     aliens.clear();                                                                 //Erstmal aufräumen
 
@@ -28,7 +31,7 @@ void Game :: updateAliens(float dt) {                                           
     bool border = false;                                                            //Grenze des Fensters anlegen (Bewegungsgrenze)
 
     for (const Alien& a : aliens) {
-        if (alienDirection > 0 && a.right() >= fenster.getSize().x) {               //Alienbewegung nach rechts (Direction +) UND rechte Kante des Aliens ist an / ueber der Fenstergroesse (rechte Kante)
+        if (alienDirection > 0 && a.right() >= static_cast<float>(fenster.getSize().x)) {               //Alienbewegung nach rechts (Direction +) UND rechte Kante des Aliens ist an / ueber der Fenstergroesse (rechte Kante)
             border = true;                                                          //DANN setze die Grenze 
         }
         if (alienDirection < 0 && a.left() <= 0.f) {                                //Alienbewegung nach links (Direction -) UND linke Kante des Aliens ist an /ueber dem beginn des Fensters (linke Kante) 
@@ -152,7 +155,7 @@ void Game :: run () {
             
             player.handleInput();                                                           //Eingaben vom Player bzw. Bewegungssteuerung                                                           
     
-            //Schuss Abfrage (es kann nur einen Schuss geben)
+                                                                                        //Schuss Abfrage (es kann nur einen Schuss geben)
             if (player.shotRequest()) {                                                     //Wenn Space-Taste gedrueckt, shotRequest gibt true zurueck
                 if(!playershot.has_value() || !playershot->isActive()) {                    //Wenn kein Schuss existiert (has_value) ODER kein Schuss aktiviert (noch fliegt/isActive) ist
                     sf :: Vector2f pos = player.shotStartPosition();                        //Neue Start-Pos fuer neuen Schuss ermitteln
@@ -166,7 +169,7 @@ void Game :: run () {
 
             tryAlienShoot(dt);
 
-            if (playershot.has_value() && playershot->isActive()) {                         //Schuss existiert und ist aktiv
+            if (playershot.has_value() && playershot->isActive()) {                     //Player - Schuss existiert und ist aktiv
                 playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
         
                 for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
@@ -179,11 +182,11 @@ void Game :: run () {
                     }
                 }
 
-                if (playershot->upperLimit() < 120.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
+                if (playershot->upperLimit() < 120.f) {                                 //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
                     playershot->deactivate();                                               //Schaltet den Schuss aus 
                 }            
 
-                if (aliens.empty()) {                                                       //Wenn keine Aliens mehr in dem Fenster sind
+                if (aliens.empty()) {                                                   //Wenn keine Aliens mehr in dem Fenster sind
                     buildAliens();                                                          //DANN erstelle erneut eine Formation
                 }
             }    
@@ -195,7 +198,7 @@ void Game :: run () {
             if (alienShot->lowerLimit() > static_cast<float>(fenster.getSize().y)) {    //Schuss verlässt Spielfeld / ueber Fenstergroesse hinaus
                 alienShot->deactivate();
 
-            } else if (alienShot->hitbox().intersects(player.hitbox())) {               //Treffer am Spieler registriert
+            } else if (alienShot->hitbox().intersects(player.hitbox())) {           //Treffer am Spieler registriert
                 alienShot->deactivate();
                 playerLivesAmount -= 1;                                                 //Spielerleben um 1 verringern
                 updateDisplay();                                                        //Display / Lebensanzeige aktualisieren
@@ -223,7 +226,7 @@ void Game :: run () {
             }
         }
 
-        for (const Alien& a : aliens) {                                                 //Kontrolle, erreicht ein Alien (alle Aliens) den Spieler
+        for (const Alien& a : aliens) {                                             //Kontrolle, erreicht ein Alien (alle Aliens) den Spieler
             float loseLineY = player.spielerPosY;                                       //Linie auf Hoehe des Spielers um Gameover zu ermitteln
             if (a.bottom() >= loseLineY) {
                 gameOverStatus = true;                                                  //Alien erreicht Spielerhoehe -> Gameover
