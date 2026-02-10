@@ -46,6 +46,9 @@ class Game {
     const float blinkInterval = 0.15f;      //Zeit bis Farbwechsel
     bool blinkOn = false;                   //Variable zum einschalten des blinkens
 
+    //Reset Spielfeld nach Lose
+    
+
     //Display - Score + Text
     int score = 0;                          //Aktueller Punktestand
     int playerLivesAmount = 3;              //Anzahl Leben fuer Spieler
