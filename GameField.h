@@ -6,11 +6,11 @@
 class GameField{
 
     public:
-    //sf :: RenderWindow fenster{sf :: VideoMode(900, 900), "Space Invaders"};    //Erstellung Fenster in Groesse (x, y)
-    GameField(sf :: RenderWindow fenster);
+    sf :: RenderWindow fenster{sf :: VideoMode(900, 900), "Space Invaders"};    //Erstellung Fenster in Groesse (x, y)
+    //GameField(sf :: RenderWindow fenster);
     //void buildWindow();
-    void initDisplay();
-    void updateDisplay();
+    void initDisplay(sf :: RenderWindow&fenster);
+    void updateDisplay(sf :: RenderWindow&fenster);
     void restartGame();
 
     private:

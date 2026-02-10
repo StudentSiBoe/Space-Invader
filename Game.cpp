@@ -56,18 +56,17 @@ void Game :: initDisplay() {                                                    
     font.loadFromFile("assets/fonts/zephyrean-brk.ttf");                            //Textart laden
 
     gameName.setFont(font);                                                         //Textart zuweisen
-    gameName.setCharacterSize(90);                                                  //Textgroesse definieren
+    gameName.setCharacterSize(115);                                                  //Textgroesse definieren
     gameName.setString("SPACE INVADERS");                                           //Text definieren
     gameName.setFillColor(sf :: Color :: Green);                                    //Textfarbe definieren
 
     scoreBoard.setFont(font);                                                       //Textart zuweisen
     scoreBoard.setCharacterSize(45);                                                //Textgroesse definieren
-    scoreBoard.setFillColor(sf :: Color :: Yellow);                                 //Textfarbe definieren
+    scoreBoard.setFillColor(sf :: Color :: Cyan);                                 //Textfarbe definieren
 
     playerLives.setFont(font);                                                      //Textart zuweisen
     playerLives.setCharacterSize(45);                                               //Textgroesse definieren
-    
-    playerLives.setFillColor(sf :: Color :: Yellow);                                //Textfarbe definieren
+    playerLives.setFillColor(sf :: Color :: Cyan);                                //Textfarbe definieren
 
     gameOverText.setFont(font);                                                     //Textart zuweisen                             
     gameOverText.setCharacterSize(180);                                             //Textgroesse definieren       
@@ -75,29 +74,43 @@ void Game :: initDisplay() {                                                    
     gameOverText.setFillColor(sf :: Color :: Red);                                  //Textfarbe definieren
 
     miniIntroduction.setFont(font);                                                 //Textart zuweisen
-    miniIntroduction.setCharacterSize(38);                                          //Textgroesse definieren
-    miniIntroduction.setString("Controlls: move left/right = arrow key left/right, shot = space");      //Text definieren       
-    miniIntroduction.setFillColor(sf :: Color :: Yellow);                           //Textfarbe definieren
+    miniIntroduction.setCharacterSize(55);                                          //Textgroesse definieren
+    miniIntroduction.setString("Controlls: \n"
+        "\n"
+        "move Player left _ arrow key left \n"
+        "move Player right _ arrow key right \n"
+        "Player shoots _ space \n"
+        "continue playing _ p\n"
+        "continue after Gameover _ r \n"
+        "\n"
+        "\n"
+        "Remake of Space Invaders Arcade \n"
+        "made by: Boerge + Simon : )");      //Text definieren       
+    miniIntroduction.setFillColor(sf :: Color :: Magenta);                           //Textfarbe definieren
 
     gameOverAddOn.setFont(font);                                                    //Textart zuweisen
-    gameOverAddOn.setCharacterSize(75);                                             //Textgroesse definieren
-    gameOverAddOn.setString("to continue press: R");                                //Text definieren
+    gameOverAddOn.setCharacterSize(80);                                             //Textgroesse definieren
+    gameOverAddOn.setString("to continue press: r");                                //Text definieren
     gameOverAddOn.setFillColor(sf :: Color :: Red);                                 //Textfarbe definieren
 
+    pausedText.setFont(font);
+    pausedText.setCharacterSize(115);
+    pausedText.setString("PAUSE MENU");
+    pausedText.setFillColor(sf :: Color :: Magenta);
     updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung
 } 
 
 void Game :: updateDisplay() {                                                                      //Aktualiert staendig den Score 
-    scoreBoard.setString("SCORE: " + std :: to_string(score));                                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
+    scoreBoard.setString("SCORE:\n" + std :: to_string(score));                                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
     scoreBoard.setPosition(10.f, 10.f);                                                             //Position fuer Score definieren (x,y)
 
-    playerLives.setString("LIVES: " + std :: to_string(playerLivesAmount));                         //Playerleben mit der int Variable anzeigen
+    playerLives.setString("LIVES:\n" + std :: to_string(playerLivesAmount));                         //Playerleben mit der int Variable anzeigen
 
     float fensterBreite = static_cast<float>(fenster.getSize().x);                                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln)
     float fensterHoehe = static_cast<float>(fenster.getSize().y);                                   //Hoehe des gesamten Fensters
 
     auto titel = gameName.getLocalBounds();                                                         //Mase des Text-Rechtecks title
-    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 15.f, 2.f);             //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
+    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 10.f, 2.f);             //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
 
     auto lP = playerLives.getLocalBounds();                                                         //Mase des Text-Rechtecks player
     playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);                       //10.f = Abstand zum Rand (fuer die Optik)
@@ -105,11 +118,14 @@ void Game :: updateDisplay() {                                                  
     auto gOver = gameOverText.getLocalBounds();                                                     //Mase des Text-Rechtecks gameOver
     gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top - 55.f);     //Position fuer GameOver Textfeld mittig auf Fenster anzeigen
 
-    auto mI = miniIntroduction.getLocalBounds();                                                                                            //Mase des Text-Rechtecks miniIntroduction
-    miniIntroduction.setPosition((fensterBreite - mI.width) / 2.f - mI.left, titel.height + 25.f);                                          //Position fuer die miniIntroduction ermiteln
-
     auto gAdd = gameOverAddOn.getLocalBounds();                                                                                             //Mase des Text-Rechtecks GameOver Zusatz Text
     gameOverAddOn.setPosition((fensterBreite - gAdd.width) / 2.f - gAdd.left, (fensterHoehe / 2.f + gOver.height / 2.f) - 15.f);            //Position fuer den GameOver Zusatz ermitteln
+
+    auto mI = miniIntroduction.getLocalBounds();                                                                                            //Mase des Text-Rechtecks miniIntroduction
+    miniIntroduction.setPosition((fensterBreite - mI.width) / 2.f - mI.left, (fensterHoehe - mI.height) / 2.f);                             //Position fuer die miniIntroduction ermiteln
+
+    auto pause = pausedText.getLocalBounds();
+    pausedText.setPosition((fensterBreite - pause.width) / 2.f - pause.left, 2.f);
 } 
 
 void Game :: tryAlienShoot(float dt) {                                              //Alien Schuss Berechnung... Alien Auswahl + Start Koordinaten berechnen 
@@ -154,6 +170,10 @@ void Game :: restartGame() {                                                    
 
     updateDisplay();                                                                //Alle Resets anzeigen
 } 
+
+void Game :: pauseGame() {
+    paused = !paused;
+}
 //-----------------------------------
 //------------HERZ-STUECK------------
 //-----------------------------------
@@ -175,10 +195,14 @@ void Game :: run () {
             if (event.type == sf :: Event :: Closed) {                              //Bei Anwahl x Fenster schliessen
                 fenster.close();
             }
-
-            if (gameOverStatus && sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: R)) {
-                restartGame();
-            }
+            if (event.type == sf :: Event :: KeyPressed) {
+                if (event.key.code == sf :: Keyboard :: P || event.key.code == sf :: Keyboard :: Escape) {
+                    pauseGame();
+                }
+                if (gameOverStatus && event.key.code == sf :: Keyboard :: R) {
+                    restartGame();
+                }
+            }    
         }
     
         float dt = clock.restart().asSeconds();                                     //dt berechnen 
@@ -193,7 +217,7 @@ void Game :: run () {
             } 
         }
 
-        if (!gameOverStatus && !hitPause) {                                                 //Spiel laeuft, wenn kein Gameover oder Treffer am Spieler
+        if (!gameOverStatus && !hitPause && !paused) {                                                 //Spiel laeuft, wenn kein Gameover oder Treffer am Spieler
             
             player.handleInput();                                                           //Eingaben vom Player bzw. Bewegungssteuerung                                                           
             
@@ -280,7 +304,7 @@ void Game :: run () {
             }
         }
         
-        if (invincible) {                                                               //Wenn unverwundbar, dann
+        if (invincible && !paused) {                                                               //Wenn unverwundbar, dann
             invincibleTimer += dt;                                                      //Timer hochzaehlen fuer unverwundbar sein
             blinkTimer += dt;                                                           //Timer hochzaehlen fuer blinken
 
@@ -294,33 +318,31 @@ void Game :: run () {
                 player.setHitVisual(invincible);                                        //Ausgangsfarbe wieder einstellen
             }
         }
-
+        //RenderWindow / fenster befüllen 
         fenster.clear();
-        player.render(fenster);                                                         //Player im Fenster zeichen
 
-        for (const Alien& a : aliens) {                                                 //a ist die Referenz (&) auf ein Alien, welches nicht veraendert werden darf (const)
-            a.render(fenster);                                                          //a : aliens -> a bekommt nacheinander jedes Element aus aliens (Was eine Referenz von Alien ist und keine Kopie!)
-        }                                                                               //Diese Referenz a in das fenster zeichnen
+        if (paused) {
+            fenster.draw(pausedText);
+            fenster.draw(miniIntroduction);
+        } else {
+            player.render(fenster);                                                         //Player im Fenster zeichen
+
+            for (const Alien& a : aliens) a.render(fenster);                                //a ist die Referenz (&) auf ein Alien, welches nicht veraendert werden darf (const); a : aliens -> a bekommt nacheinander jedes Element aus aliens (Was eine Referenz von Alien ist und keine Kopie!
     
-        if (playershot.has_value()) {                                                   //Wenn gerade einen Shot vom Spieler existiert, DANN
-            playershot->render(fenster);                                                //Zeichne den Schuss in das Fenster
-    
-        }                                                                               //Hier keine isActive Abfrage, weil render Active bereits kontrolliert
-        if (alienShot.has_value()) {                                                    //Wenn gerade einen Shot vom Spieler existiert, DANN                                                                             
-            alienShot->render(fenster);                                                 //Zeichne den Schuss in das Fenster
+            if (playershot.has_value()) playershot->render(fenster);                        //Wenn gerade einen Shot vom Spieler existiert, DANN                                                                                    
+            if (alienShot.has_value()) alienShot->render(fenster);                          //Wenn gerade einen Shot vom Spieler existiert, DANN
+            
+            fenster.draw(playerLives);                                                      //Alle Textfelder auf das Fenster zeichnen
+            fenster.draw(gameName);
+            fenster.draw(scoreBoard);
         }
-
-        fenster.draw(playerLives);                                                      //Alle Textfelder auf das Fenster zeichnen
-        fenster.draw(gameName);
-        fenster.draw(scoreBoard);
-        fenster.draw(miniIntroduction);
-
-        if (gameOverStatus) {                                                           //Textfeld ausgabe bei GameOver
+        
+        if (gameOverStatus && !paused) {                                                               //Textfeld ausgabe bei GameOver
             fenster.draw(gameOverText);
             fenster.draw(gameOverAddOn);
         }
 
-        fenster.display();                                                              //SFML Fenster auf dem Screen anzeigen
+        fenster.display();                                                                  //SFML Fenster auf dem Screen anzeigen
 
     }
 }

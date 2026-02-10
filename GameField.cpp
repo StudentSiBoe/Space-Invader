@@ -1,6 +1,6 @@
 # include "GameField.h"
 /*
-void GameField :: initDisplay() {                                                        //Definieren der Texteigenschaften - Display
+void GameField :: initDisplay(sf :: RenderWindow&fenster) {                                                        //Definieren der Texteigenschaften - Display
     font.loadFromFile("assets/fonts/zephyrean-brk.ttf");                            //Textart laden
 
     gameName.setFont(font);                                                         //Textart zuweisen
@@ -35,7 +35,7 @@ void GameField :: initDisplay() {                                               
     updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung
 }
 
-void GameField :: updateDisplay() {                                                                      //Aktualiert staendig den Score 
+void GameField :: updateDisplay(sf :: RenderWindow&fenster) {                                                                      //Aktualiert staendig den Score 
     scoreBoard.setString("SCORE: " + std :: to_string(score));                                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
     scoreBoard.setPosition(10.f, 10.f);                                                             //Position fuer Score definieren (x,y)
 
@@ -81,9 +81,11 @@ void GameField :: restartGame() {                                               
     updateDisplay();                                                                //Alle Resets anzeigen
 }
 
-*/
+
 
 GameField :: GameField (sf :: RenderWindow fenster) {
+
     //Groesse festlegen
     //BAUSTELLE xD
 }
+*/

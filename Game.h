@@ -47,7 +47,10 @@ class Game {
     const float blinkInterval = 0.15f;      //Zeit bis Farbwechsel
     bool blinkOn = false;                   //Variable zum einschalten des blinkens
 
+    //Zusatz Methoden / Funktionen
     void restartGame();                     //Reset Spielfeld nach Lose
+    void pauseGame();
+    bool paused = false;
 
     //Display - Score + Text
     int score = 0;                          //Aktueller Punktestand
@@ -63,4 +66,5 @@ class Game {
     sf :: Text gameOverText;                //Textfeld bei Gameover
     sf :: Text miniIntroduction;
     sf :: Text gameOverAddOn; 
+    sf :: Text pausedText;
 };
