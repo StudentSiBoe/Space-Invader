@@ -117,11 +117,25 @@ void Game :: tryAlienShoot(float dt) {
                                                                                     //Schuss ist nicht vorhersehbar, macht Spiel schwerer (kein Muster)
 }
 
-void Game :: restartGame() {
-    gameOverStatus = false;
-    score = 0;
-    playerLivesAmount = 3;
+void Game :: restartGame() {                                                        //Option zum Restart bei Gameover und R
+    gameOverStatus = false;                                                         //Alle Kontroll-Variablen zuruecksetzen
+    hitPause = false;
+    invincible = false;
+    blinkOn = false;
+    hitPauseTimer = 0.f;                                                            //Timer zuruecksetzen
+    invincibleTimer = 0.f;
+    blinkTimer = 0.f;
+    score = 0;                                                                      //Score zuruecksetzen
+    playerLivesAmount = 3;                                                          //Leben zuruecksetzen
     
+    playershot.reset();                                                             //Spielerschuss zuruecksetzen / vom Feldnehmen
+    alienShot.reset();                                                              //Alienschuss zuruecksetzen / vom Feldnehmen
+
+    buildAliens();                                                                  //Neue Alienfront
+
+    player.setHitVisual(false);                                                     //Absicherung fuer normale Farbe 
+
+    updateDisplay();                                                                //Alle Resets anzeigen
 }
 //-----------------------------------
 //------------HERZ-STUECK------------
@@ -145,9 +159,9 @@ void Game :: run () {
                 fenster.close();
             }
 
-            /*if (gameOverStatus && sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: R)) {
+            if (gameOverStatus && sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: R)) {
                 restartGame();
-            }*/
+            }
         }
     
         float dt = clock.restart().asSeconds();                                     //dt berechnen 
@@ -193,19 +207,17 @@ void Game :: run () {
                     }
                 }
 
-                if (playershot->upperLimit() < 120.f) {                                 //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
+                if (playershot->upperLimit() < 120.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
                     playershot->deactivate();                                               //Schaltet den Schuss aus 
                 }            
-
-                
             }    
         }   
         
-        if (aliens.empty()) {                                                   //Wenn keine Aliens mehr in dem Fenster sind
-            if (playerLivesAmount < 3) {
-                playerLivesAmount += 1;
-                updateDisplay();
-            }; 
+        if (aliens.empty()) {                                                       //Wenn keine Aliens mehr in dem Fenster sind
+            if (playerLivesAmount < 3) {                                            //Wenn Spieler keine 3 Leben, dann
+                playerLivesAmount += 1;                                             //1 Leben dazu 
+                updateDisplay();                                                    //Display aktualisieren
+            } 
             buildAliens();                                                          //DANN erstelle erneut eine Formation
         }
 
@@ -247,7 +259,6 @@ void Game :: run () {
             float loseLineY = player.spielerPosY;                                       //Linie auf Hoehe des Spielers um Gameover zu ermitteln
             if (a.bottom() >= loseLineY) {
                 gameOverStatus = true;                                                  //Alien erreicht Spielerhoehe -> Gameover
-                restartGame();
                 break;
             }
         }
