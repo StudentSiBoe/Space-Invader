@@ -10,6 +10,7 @@
 #include "Shot.h"
 #include "Alien.h"
 #include "AlienShot.h"
+#include "GameField.h"
 
 class Game {
 
@@ -61,5 +62,5 @@ class Game {
     sf :: Text playerLives;                 //Textfeld fuer Leben definieren
     sf :: Text gameOverText;                //Textfeld bei Gameover
     sf :: Text miniIntroduction;
-    sf :: Text gameOverAddOn;
+    sf :: Text gameOverAddOn; 
 };

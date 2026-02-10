@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "GameField.h"
 #include <iostream>
 #include <string>
 
@@ -84,7 +85,7 @@ void Game :: initDisplay() {                                                    
     gameOverAddOn.setFillColor(sf :: Color :: Red);                                 //Textfarbe definieren
 
     updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung
-}
+} 
 
 void Game :: updateDisplay() {                                                                      //Aktualiert staendig den Score 
     scoreBoard.setString("SCORE: " + std :: to_string(score));                                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
@@ -109,9 +110,9 @@ void Game :: updateDisplay() {                                                  
 
     auto gAdd = gameOverAddOn.getLocalBounds();                                                                                             //Mase des Text-Rechtecks GameOver Zusatz Text
     gameOverAddOn.setPosition((fensterBreite - gAdd.width) / 2.f - gAdd.left, (fensterHoehe / 2.f + gOver.height / 2.f) - 15.f);            //Position fuer den GameOver Zusatz ermitteln
-}
+} 
 
-void Game :: tryAlienShoot(float dt) {
+void Game :: tryAlienShoot(float dt) {                                              //Alien Schuss Berechnung... Alien Auswahl + Start Koordinaten berechnen 
     alienShootTimer += dt;                                                          //Timer erhoehen in jedem Frame
 
     if (aliens.empty()                                                              //Wenn es keine Aliens mehr auf dem Feld gibt 
@@ -152,7 +153,7 @@ void Game :: restartGame() {                                                    
     player.setHitVisual(false);                                                     //Absicherung fuer normale Farbe 
 
     updateDisplay();                                                                //Alle Resets anzeigen
-}
+} 
 //-----------------------------------
 //------------HERZ-STUECK------------
 //-----------------------------------
