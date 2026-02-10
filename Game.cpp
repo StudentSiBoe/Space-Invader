@@ -73,42 +73,42 @@ void Game :: initDisplay() {                                                    
     gameOverText.setString("GAME OVER");                                            //Text definieren
     gameOverText.setFillColor(sf :: Color :: Red);                                  //Textfarbe definieren
 
-    miniIntroduction.setFont(font);
+    miniIntroduction.setFont(font);                                                 //Textart zuweisen
     miniIntroduction.setCharacterSize(38);                                          //Textgroesse definieren
-    miniIntroduction.setString("Controlls: move left/right = arrow key left/right, shot = space");         
-    miniIntroduction.setFillColor(sf :: Color :: Yellow);
+    miniIntroduction.setString("Controlls: move left/right = arrow key left/right, shot = space");      //Text definieren       
+    miniIntroduction.setFillColor(sf :: Color :: Yellow);                           //Textfarbe definieren
 
-    gameOverAddOn.setFont(font);
-    gameOverAddOn.setCharacterSize(75);
-    gameOverAddOn.setString("to continue press: R");
-    gameOverAddOn.setFillColor(sf :: Color :: Red);
+    gameOverAddOn.setFont(font);                                                    //Textart zuweisen
+    gameOverAddOn.setCharacterSize(75);                                             //Textgroesse definieren
+    gameOverAddOn.setString("to continue press: R");                                //Text definieren
+    gameOverAddOn.setFillColor(sf :: Color :: Red);                                 //Textfarbe definieren
 
     updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung
 }
 
-void Game :: updateDisplay() {                                                      //Aktualiert staendig den Score 
-    scoreBoard.setString("SCORE: " + std :: to_string(score));                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
-    scoreBoard.setPosition(10.f, 10.f);                                             //Position fuer Score definieren (x,y)
+void Game :: updateDisplay() {                                                                      //Aktualiert staendig den Score 
+    scoreBoard.setString("SCORE: " + std :: to_string(score));                                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
+    scoreBoard.setPosition(10.f, 10.f);                                                             //Position fuer Score definieren (x,y)
 
-    playerLives.setString("LIVES: " + std :: to_string(playerLivesAmount));         //Playerleben mit der int Variable anzeigen
+    playerLives.setString("LIVES: " + std :: to_string(playerLivesAmount));                         //Playerleben mit der int Variable anzeigen
 
-    float fensterBreite = static_cast<float>(fenster.getSize().x);                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln)
-    float fensterHoehe = static_cast<float>(fenster.getSize().y);
+    float fensterBreite = static_cast<float>(fenster.getSize().x);                                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln)
+    float fensterHoehe = static_cast<float>(fenster.getSize().y);                                   //Hoehe des gesamten Fensters
 
-    auto titel = gameName.getLocalBounds();                                         //Mase des Text-Rechtecks title
-    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 15.f, 2.f);    //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
+    auto titel = gameName.getLocalBounds();                                                         //Mase des Text-Rechtecks title
+    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 15.f, 2.f);             //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
 
-    auto lP = playerLives.getLocalBounds();                                         //Mase des Text-Rechtecks player
-    playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);       //10.f = Abstand zum Rand (fuer die Optik)
+    auto lP = playerLives.getLocalBounds();                                                         //Mase des Text-Rechtecks player
+    playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);                       //10.f = Abstand zum Rand (fuer die Optik)
 
-    auto gOver = gameOverText.getLocalBounds();                                    //Mase des Text-Rechtecks gameOver
-    gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top - 55.f);    //Position fuer GameOver Textfeld mittig auf Fenster anzeigen
+    auto gOver = gameOverText.getLocalBounds();                                                     //Mase des Text-Rechtecks gameOver
+    gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top - 55.f);     //Position fuer GameOver Textfeld mittig auf Fenster anzeigen
 
-    auto mI = miniIntroduction.getLocalBounds();
-    miniIntroduction.setPosition((fensterBreite - mI.width) / 2.f - mI.left, titel.height + 25.f); 
+    auto mI = miniIntroduction.getLocalBounds();                                                                                            //Mase des Text-Rechtecks miniIntroduction
+    miniIntroduction.setPosition((fensterBreite - mI.width) / 2.f - mI.left, titel.height + 25.f);                                          //Position fuer die miniIntroduction ermiteln
 
-    auto gAdd = gameOverAddOn.getLocalBounds();
-    gameOverAddOn.setPosition((fensterBreite - gAdd.width) / 2.f - gAdd.left, (fensterHoehe / 2.f + gOver.height / 2.f) - 15.f);         //static_cast<float>(gOver.getPosition().y) + 
+    auto gAdd = gameOverAddOn.getLocalBounds();                                                                                             //Mase des Text-Rechtecks GameOver Zusatz Text
+    gameOverAddOn.setPosition((fensterBreite - gAdd.width) / 2.f - gAdd.left, (fensterHoehe / 2.f + gOver.height / 2.f) - 15.f);            //Position fuer den GameOver Zusatz ermitteln
 }
 
 void Game :: tryAlienShoot(float dt) {
@@ -196,7 +196,7 @@ void Game :: run () {
             
             player.handleInput();                                                           //Eingaben vom Player bzw. Bewegungssteuerung                                                           
             
-                                                                                        //Schuss Abfrage (es kann nur einen Schuss geben)
+                                                                                            //Schuss Abfrage (es kann nur einen Schuss geben)
             if (player.shotRequest()) {                                                     //Wenn Space-Taste gedrueckt, shotRequest gibt true zurueck
                 if(!playershot.has_value() || !playershot->isActive()) {                    //Wenn kein Schuss existiert (has_value) ODER kein Schuss aktiviert (noch fliegt/isActive) ist
                     sf :: Vector2f pos = player.shotStartPosition();                        //Neue Start-Pos fuer neuen Schuss ermitteln
@@ -210,7 +210,7 @@ void Game :: run () {
 
             tryAlienShoot(dt);
 
-            if (playershot.has_value() && playershot->isActive()) {                     //Player - Schuss existiert und ist aktiv
+            if (playershot.has_value() && playershot->isActive()) {                         //Player - Schuss existiert und ist aktiv
                 playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
         
                 for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
@@ -243,7 +243,7 @@ void Game :: run () {
             if (alienShot->lowerLimit() > static_cast<float>(fenster.getSize().y)) {    //Schuss verlässt Spielfeld / ueber Fenstergroesse hinaus
                 alienShot->deactivate();
 
-            } else if (alienShot->hitbox().intersects(player.hitbox())) {           //Treffer am Spieler registriert
+            } else if (alienShot->hitbox().intersects(player.hitbox())) {               //Treffer am Spieler registriert
                 alienShot->deactivate();
                 playerLivesAmount -= 1;                                                 //Spielerleben um 1 verringern
                 updateDisplay();                                                        //Display / Lebensanzeige aktualisieren
@@ -257,7 +257,7 @@ void Game :: run () {
                     blinkOn = true;                                                     //blinken an
                     player.setHitVisual(blinkOn);                                       //Methode zum blinken aufrufen mit true
                     
-                } else {                                                            //TREFFER Anzeige
+                } else {                                                                //TREFFER Anzeige
                     hitPause = true;                                                    //ANSONSTEN Stopp/stehen an (Player bleibt stehen)
                     hitPauseTimer = 0.f;                                                //Start Standzeit
 
@@ -271,7 +271,7 @@ void Game :: run () {
             }
         }
 
-        for (const Alien& a : aliens) {                                             //Kontrolle, erreicht ein Alien (alle Aliens) den Spieler
+        for (const Alien& a : aliens) {                                                 //Kontrolle, erreicht ein Alien (alle Aliens) den Spieler
             float loseLineY = player.spielerPosY;                                       //Linie auf Hoehe des Spielers um Gameover zu ermitteln
             if (a.bottom() >= loseLineY) {
                 gameOverStatus = true;                                                  //Alien erreicht Spielerhoehe -> Gameover
@@ -309,12 +309,12 @@ void Game :: run () {
             alienShot->render(fenster);                                                 //Zeichne den Schuss in das Fenster
         }
 
-        fenster.draw(playerLives);
+        fenster.draw(playerLives);                                                      //Alle Textfelder auf das Fenster zeichnen
         fenster.draw(gameName);
         fenster.draw(scoreBoard);
         fenster.draw(miniIntroduction);
 
-        if (gameOverStatus) {
+        if (gameOverStatus) {                                                           //Textfeld ausgabe bei GameOver
             fenster.draw(gameOverText);
             fenster.draw(gameOverAddOn);
         }
