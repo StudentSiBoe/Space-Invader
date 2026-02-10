@@ -116,6 +116,13 @@ void Game :: tryAlienShoot(float dt) {
     alienShootInterval = 0.9f + static_cast<float>(rand()) / RAND_MAX * 1.2f;       //Die Zufallszahl wird mit rand() von 0 bis RAND_MAX erzeugt... Normieren durch / -> 0..1 + &* -> 0,9 bis 2.1
                                                                                     //Schuss ist nicht vorhersehbar, macht Spiel schwerer (kein Muster)
 }
+
+void Game :: restartGame() {
+    gameOverStatus = false;
+    score = 0;
+    playerLivesAmount = 3;
+    
+}
 //-----------------------------------
 //------------HERZ-STUECK------------
 //-----------------------------------
@@ -137,6 +144,10 @@ void Game :: run () {
             if (event.type == sf :: Event :: Closed) {                              //Bei Anwahl x Fenster schliessen
                 fenster.close();
             }
+
+            /*if (gameOverStatus && sf :: Keyboard :: isKeyPressed(sf :: Keyboard :: R)) {
+                restartGame();
+            }*/
         }
     
         float dt = clock.restart().asSeconds();                                     //dt berechnen 
@@ -154,7 +165,7 @@ void Game :: run () {
         if (!gameOverStatus && !hitPause) {                                                 //Spiel laeuft, wenn kein Gameover oder Treffer am Spieler
             
             player.handleInput();                                                           //Eingaben vom Player bzw. Bewegungssteuerung                                                           
-    
+            
                                                                                         //Schuss Abfrage (es kann nur einen Schuss geben)
             if (player.shotRequest()) {                                                     //Wenn Space-Taste gedrueckt, shotRequest gibt true zurueck
                 if(!playershot.has_value() || !playershot->isActive()) {                    //Wenn kein Schuss existiert (has_value) ODER kein Schuss aktiviert (noch fliegt/isActive) ist
@@ -186,12 +197,18 @@ void Game :: run () {
                     playershot->deactivate();                                               //Schaltet den Schuss aus 
                 }            
 
-                if (aliens.empty()) {                                                   //Wenn keine Aliens mehr in dem Fenster sind
-                    buildAliens();                                                          //DANN erstelle erneut eine Formation
-                }
+                
             }    
         }   
-    
+        
+        if (aliens.empty()) {                                                   //Wenn keine Aliens mehr in dem Fenster sind
+            if (playerLivesAmount < 3) {
+                playerLivesAmount += 1;
+                updateDisplay();
+            }; 
+            buildAliens();                                                          //DANN erstelle erneut eine Formation
+        }
+
         if (alienShot.has_value() && alienShot->isActive()) {      
             alienShot->update(dt);
 
@@ -230,6 +247,7 @@ void Game :: run () {
             float loseLineY = player.spielerPosY;                                       //Linie auf Hoehe des Spielers um Gameover zu ermitteln
             if (a.bottom() >= loseLineY) {
                 gameOverStatus = true;                                                  //Alien erreicht Spielerhoehe -> Gameover
+                restartGame();
                 break;
             }
         }
