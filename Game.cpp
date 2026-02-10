@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-//Highscore Boe: 4180
+//Highscore Boe: 13140
 //Highscore Simon: 2180
 
 void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
@@ -90,7 +90,7 @@ void Game :: initDisplay() {                                                    
 
     gameOverAddOn.setFont(font);                                                    //Textart zuweisen
     gameOverAddOn.setCharacterSize(80);                                             //Textgroesse definieren
-    gameOverAddOn.setString("to continue press: r");                                //Text definieren
+    gameOverAddOn.setString("to continue press: R");                                //Text definieren
     gameOverAddOn.setFillColor(sf :: Color :: Red);                                 //Textfarbe definieren
 
     pausedText.setFont(font);
@@ -235,7 +235,7 @@ void Game :: run () {
 
             tryAlienShoot(dt);
 
-            if (playershot.has_value() && playershot->isActive()) {                         //Player - Schuss existiert und ist aktiv
+            if (playershot.has_value() && playershot->isActive() && !paused) {                         //Player - Schuss existiert und ist aktiv
                 playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
         
                 for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
@@ -254,7 +254,7 @@ void Game :: run () {
             }    
         }   
         
-        if (aliens.empty()) {                                                       //Wenn keine Aliens mehr in dem Fenster sind
+        if (aliens.empty() && !paused) {                                                       //Wenn keine Aliens mehr in dem Fenster sind
             if (playerLivesAmount < 3) {                                            //Wenn Spieler keine 3 Leben, dann
                 playerLivesAmount += 1;                                             //1 Leben dazu 
                 updateDisplay();                                                    //Display aktualisieren
@@ -262,7 +262,7 @@ void Game :: run () {
             buildAliens();                                                          //DANN erstelle erneut eine Formation
         }
 
-        if (alienShot.has_value() && alienShot->isActive()) {      
+        if (alienShot.has_value() && alienShot->isActive()&& !paused) {      
             alienShot->update(dt);
 
             if (alienShot->lowerLimit() > static_cast<float>(fenster.getSize().y)) {    //Schuss verlässt Spielfeld / ueber Fenstergroesse hinaus
