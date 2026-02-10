@@ -60,4 +60,6 @@ class Game {
     sf :: Text scoreBoard;                  //Textfeld fuer Punktestand definieren
     sf :: Text playerLives;                 //Textfeld fuer Leben definieren
     sf :: Text gameOverText;                //Textfeld bei Gameover
+    sf :: Text miniIntroduction;
+    sf :: Text gameOverAddOn;
 };

@@ -55,7 +55,7 @@ void Game :: initDisplay() {                                                    
     font.loadFromFile("assets/fonts/zephyrean-brk.ttf");                            //Textart laden
 
     gameName.setFont(font);                                                         //Textart zuweisen
-    gameName.setCharacterSize(95);                                                  //Textgroesse definieren
+    gameName.setCharacterSize(90);                                                  //Textgroesse definieren
     gameName.setString("SPACE INVADERS");                                           //Text definieren
     gameName.setFillColor(sf :: Color :: Green);                                    //Textfarbe definieren
 
@@ -73,6 +73,16 @@ void Game :: initDisplay() {                                                    
     gameOverText.setString("GAME OVER");                                            //Text definieren
     gameOverText.setFillColor(sf :: Color :: Red);                                  //Textfarbe definieren
 
+    miniIntroduction.setFont(font);
+    miniIntroduction.setCharacterSize(38);                                          //Textgroesse definieren
+    miniIntroduction.setString("Controlls: move left/right = arrow key left/right, shot = space");         
+    miniIntroduction.setFillColor(sf :: Color :: Yellow);
+
+    gameOverAddOn.setFont(font);
+    gameOverAddOn.setCharacterSize(75);
+    gameOverAddOn.setString("to continue press: R");
+    gameOverAddOn.setFillColor(sf :: Color :: Red);
+
     updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung
 }
 
@@ -86,13 +96,19 @@ void Game :: updateDisplay() {                                                  
     float fensterHoehe = static_cast<float>(fenster.getSize().y);
 
     auto titel = gameName.getLocalBounds();                                         //Mase des Text-Rechtecks title
-    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left, 5.f);    //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
+    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 15.f, 2.f);    //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
 
     auto lP = playerLives.getLocalBounds();                                         //Mase des Text-Rechtecks player
     playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);       //10.f = Abstand zum Rand (fuer die Optik)
 
     auto gOver = gameOverText.getLocalBounds();                                    //Mase des Text-Rechtecks gameOver
-    gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top);    //Position fuer GameOver Textfeld mittig auf Fenster anzeigen
+    gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top - 55.f);    //Position fuer GameOver Textfeld mittig auf Fenster anzeigen
+
+    auto mI = miniIntroduction.getLocalBounds();
+    miniIntroduction.setPosition((fensterBreite - mI.width) / 2.f - mI.left, titel.height + 25.f); 
+
+    auto gAdd = gameOverAddOn.getLocalBounds();
+    gameOverAddOn.setPosition((fensterBreite - gAdd.width) / 2.f - gAdd.left, (fensterHoehe / 2.f + gOver.height / 2.f) - 15.f);         //static_cast<float>(gOver.getPosition().y) + 
 }
 
 void Game :: tryAlienShoot(float dt) {
@@ -122,14 +138,14 @@ void Game :: restartGame() {                                                    
     hitPause = false;
     invincible = false;
     blinkOn = false;
-    hitPauseTimer = 0.f;                                                            //Timer zuruecksetzen
+    hitPauseTimer = 0.f;                                                            //Timer zuruecksetzen       
     invincibleTimer = 0.f;
     blinkTimer = 0.f;
     score = 0;                                                                      //Score zuruecksetzen
     playerLivesAmount = 3;                                                          //Leben zuruecksetzen
     
-    playershot.reset();                                                             //Spielerschuss zuruecksetzen / vom Feldnehmen
-    alienShot.reset();                                                              //Alienschuss zuruecksetzen / vom Feldnehmen
+    playershot.reset();                                                             //Optionaler Spielerschuss loeschen
+    alienShot.reset();                                                              //Optionaler Alienschuss loeschen
 
     buildAliens();                                                                  //Neue Alienfront
 
@@ -207,7 +223,7 @@ void Game :: run () {
                     }
                 }
 
-                if (playershot->upperLimit() < 120.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
+                if (playershot->upperLimit() < 130.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
                     playershot->deactivate();                                               //Schaltet den Schuss aus 
                 }            
             }    
@@ -296,9 +312,11 @@ void Game :: run () {
         fenster.draw(playerLives);
         fenster.draw(gameName);
         fenster.draw(scoreBoard);
+        fenster.draw(miniIntroduction);
 
         if (gameOverStatus) {
             fenster.draw(gameOverText);
+            fenster.draw(gameOverAddOn);
         }
 
         fenster.display();                                                              //SFML Fenster auf dem Screen anzeigen

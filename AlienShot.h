@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-class AlienShot {
+class AlienShot {                                               //gleicher Aufbau wie Shot.cpp  
     
     public:
     AlienShot(float abX, float abY);
