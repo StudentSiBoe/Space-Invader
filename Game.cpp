@@ -4,7 +4,31 @@
 #include <string>
 
 //Highscore Boe: 13140
-//Highscore Simon: 2180
+//Highscore Simon: 13180
+
+
+void Game :: buildBarriers() {                                                        //Aufbau der Barrieren
+    barriers.clear();                                                                 //Erstmal aufräumen
+    int hp = 10;
+    int damage = 0;
+
+    const int rows = 1;                                                             //Anzahl Reihen nach unten (y)
+    const int cols = 4;                                                            //Anzahl Spalten nach rechts (x)
+
+    const float startX = 75.f;                                                     //Start X Koordinate erster Barriere
+    const float startY = 750.f;                                                     //Start Y Koordinate erster Barriere
+
+    const float gapX = 225.f;                                               //Abstand X zwischen zwei Barrieren
+    const float gapY = 0.f;                                                        //Abstand Y zwischen zwei Barrieren
+
+    for (int i = 0; i < rows; i++) {                                                //Schleife - Reihen durchlaufen 
+        for (int j = 0; j < cols; j++) {                                            //Schleife - Spalten durchgehen 
+            float x = startX + j * gapX;                                            //X - Position fuer Barrieren Platzierung
+            float y = startY + i * gapY;                                            //Y - Position fuer Barrieren Platzierung
+            barriers.emplace_back(x, y);                                            //Positionen (x,y) weitergeben
+        }
+    }
+}
 
 void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
     aliens.clear();                                                                 //Erstmal aufräumen
@@ -77,7 +101,7 @@ void Game :: initDisplay() {                                                    
     miniIntroduction.setCharacterSize(55);                                          //Textgroesse definieren
     miniIntroduction.setString("Controlls: \n"
         "\n"
-        "move Player left _ arrow key left \n"
+        "move Player left _ arrow key left \n"                                      //vielleicht Pfeil-Icons
         "move Player right _ arrow key right \n"
         "Player shoots _ space \n"
         "continue playing _ p\n"
@@ -165,6 +189,7 @@ void Game :: restartGame() {                                                    
     alienShot.reset();                                                              //Optionaler Alienschuss loeschen
 
     buildAliens();                                                                  //Neue Alienfront
+    buildBarriers();
 
     player.setHitVisual(false);                                                     //Absicherung fuer normale Farbe 
 
@@ -188,6 +213,7 @@ void Game :: run () {
 
     buildAliens();                                                                  //Aufruf - Bau Alien-Reihen
 
+    buildBarriers();    
     while (fenster.isOpen()) {                                                      //Feedback vom fenster (es existiert)
         sf :: Event event;                                                          //Variable event zum abfangen von befehlen
                                                                                     
@@ -237,7 +263,7 @@ void Game :: run () {
 
             if (playershot.has_value() && playershot->isActive() && !paused) {                         //Player - Schuss existiert und ist aktiv
                 playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
-        
+        //hier?
                 for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
                     if (playershot->hitbox().intersects(aliens[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
                         aliens.erase(aliens.begin() + i);                                   //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
@@ -247,6 +273,15 @@ void Game :: run () {
                         break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
                     }
                 }
+
+                for (int i = 0; i < barriers.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
+                    if (playershot->hitbox().intersects(barriers[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
+                        barriers.erase(barriers.begin() + i);                                 //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
+                        playershot->deactivate();                                           //Schuss deaktivieren
+                        break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
+                    }
+                }
+
 
                 if (playershot->upperLimit() < 130.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
                     playershot->deactivate();                                               //Schaltet den Schuss aus 
@@ -328,7 +363,8 @@ void Game :: run () {
             player.render(fenster);                                                         //Player im Fenster zeichen
 
             for (const Alien& a : aliens) a.render(fenster);                                //a ist die Referenz (&) auf ein Alien, welches nicht veraendert werden darf (const); a : aliens -> a bekommt nacheinander jedes Element aus aliens (Was eine Referenz von Alien ist und keine Kopie!
-    
+            for (const Barrier& b : barriers) b.render(fenster);                            //b ist die Referenz (&) auf eine Barriere, welches nicht veraendert werden darf (const); b : barriers -> b bekommt nacheinander jedes Element aus barriers (Was eine Referenz von Barrier ist und keine Kopie!
+            
             if (playershot.has_value()) playershot->render(fenster);                        //Wenn gerade einen Shot vom Spieler existiert, DANN                                                                                    
             if (alienShot.has_value()) alienShot->render(fenster);                          //Wenn gerade einen Shot vom Spieler existiert, DANN
             

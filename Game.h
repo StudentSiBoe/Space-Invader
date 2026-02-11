@@ -11,6 +11,7 @@
 #include "Alien.h"
 #include "AlienShot.h"
 #include "GameField.h"
+#include "Barrier.h"
 
 class Game {
 
@@ -33,7 +34,12 @@ class Game {
     void tryAlienShoot(float dt);           //Alien Schuss Berechnung und Freigaben zum schiessen testen
     float alienShootTimer = 0.f;            //vergangene Zeit nach jedem Schuss 
     float alienShootInterval = 1.2f;        //Alien Schuss Intervall (alle ... Sekunden schiessen)
-
+    
+    //Barrieren
+    void buildBarriers();                   //Methode zum Aufbau der Barrieren
+    std :: vector<Barrier> barriers;        //Vektor mit allen Barrieren auf dem Feld
+    void updateBarriers();                  //Methode zum Aktualisieren der Barrieren (Treffer etc.)
+    
     //Trefferanzeige - Spieler 
     bool hitPause = false;                  //Variable bei getroffen werden            
     float hitPauseTimer = 0.f;              //gestoppte Zeit als Timer
