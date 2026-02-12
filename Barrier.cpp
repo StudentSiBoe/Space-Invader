@@ -2,7 +2,7 @@
 Barrier :: Barrier(float x, float y) {                                     //Objekt Barrier erzeugen
 
    barrier.setSize({75.f, 60.f});                                        //Groesse einer Barriere definieren
-   barrier.setFillColor(sf :: Color :: Yellow);                           //Farbe einer Barriere definieren
+   barrier.setFillColor(sf :: Color :: Cyan);                           //Farbe einer Barriere definieren
    barrier.setPosition(x, y);                                            //Position einer Barriere
 
 

@@ -4,7 +4,7 @@
 #include <string>
 
 //Highscore Boe: 13140
-//Highscore Simon: 13180
+//Highscore Simon: 13180 Ja MOIN
 
 
 void Game :: buildBarriers() {                                                        //Aufbau der Barrieren
@@ -328,6 +328,17 @@ void Game :: run () {
                     blinkOn = true;                                                     //blinken an
                     player.setHitVisual(blinkOn);                                       //Methode zum blinken aufrufen mit true
                 }
+            //NEW - Alienshot killed Barrier    
+            } else {
+
+                for (int j = 0; j < barriers.size(); j++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
+                    if (alienShot->hitbox().intersects(barriers[j].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
+                        barriers.erase(barriers.begin() + j);                                 //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
+                        alienShot->deactivate();                                           //Schuss deaktivieren
+                        break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
+                    }
+                }
+
             }
         }
 
