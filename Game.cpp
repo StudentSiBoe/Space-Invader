@@ -4,7 +4,7 @@
 #include <string>
 
 //Highscore Boe: 13140
-//Highscore Simon: 13180 Ja MOIN
+//Highscore Simon: 21180
 
 
 void Game :: buildBarriers() {                                                        //Aufbau der Barrieren
@@ -363,7 +363,7 @@ void Game :: run () {
                             break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist barrier.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
                     }
                 }
-                
+
                 }
 
             }
