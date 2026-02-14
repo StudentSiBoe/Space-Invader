@@ -263,7 +263,7 @@ void Game :: run () {
 
             if (playershot.has_value() && playershot->isActive() && !paused) {                         //Player - Schuss existiert und ist aktiv
                 playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
-        //hier?
+
                 for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
                     if (playershot->hitbox().intersects(aliens[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
                         aliens.erase(aliens.begin() + i);                                   //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
@@ -273,14 +273,27 @@ void Game :: run () {
                         break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
                     }
                 }
-
-                for (int i = 0; i < barriers.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
-                    if (playershot->hitbox().intersects(barriers[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
-                        barriers.erase(barriers.begin() + i);                                 //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
-                        playershot->deactivate();                                           //Schuss deaktivieren
-                        break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
+//Barrier Änderungen
+                for (int i = 0; i < barriers.size(); i++) {                                   //solange i kleiner als die Anzahl der existierenden Barrieren ist
+                    if (playershot->hitbox().intersects(barriers[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Barrier[i]
+                        barriers[i].damage(1);                                          //Barriere um 1 HP beschädigen
+                        playershot->deactivate();
+                        
+                        if (barriers[i].getHealthPoints() < 7 && barriers[i].getHealthPoints() > 4) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
+                            barriers[i].setColor(sf :: Color :: Yellow);                           //Farbe der Barriere auf Gelb aendern                                                    
+                            updateDisplay();
+                        }
+                        if (barriers[i].getHealthPoints() < 5 && barriers[i].getHealthPoints() > 0) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
+                            barriers[i].setColor(sf :: Color :: Red);                           //Farbe der Barriere auf Rot aendern                                                     
+                            updateDisplay();
+                        }
+                        if (barriers[i].getHealthPoints() <= 0) {                                        //Wenn HP der Barriere 0 oder kleiner, dann
+                            barriers.erase(barriers.begin() + i);                               //Barriere loeschen
+                            updateDisplay();                                 
+                            break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist barrier.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
                     }
                 }
+            }
 
 
                 if (playershot->upperLimit() < 130.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
@@ -333,10 +346,24 @@ void Game :: run () {
 
                 for (int j = 0; j < barriers.size(); j++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
                     if (alienShot->hitbox().intersects(barriers[j].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
-                        barriers.erase(barriers.begin() + j);                                 //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
-                        alienShot->deactivate();                                           //Schuss deaktivieren
-                        break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist alien.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
+                        barriers[j].damage(1);                                          //Barriere um 1 HP beschädigen
+                        alienShot->deactivate();
+                        
+                        if (barriers[j].getHealthPoints() < 7 && barriers[j].getHealthPoints() > 4) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
+                            barriers[j].setColor(sf :: Color :: Yellow);                           //Farbe der Barriere auf Gelb aendern                                                    
+                            updateDisplay();
+                        }
+                        if (barriers[j].getHealthPoints() < 5 && barriers[j].getHealthPoints() > 0) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
+                            barriers[j].setColor(sf :: Color :: Red);                           //Farbe der Barriere auf Rot aendern                                                     
+                            updateDisplay();
+                        }
+                        if (barriers[j].getHealthPoints() <= 0) {                                        //Wenn HP der Barriere 0 oder kleiner, dann
+                            barriers.erase(barriers.begin() + j);                               //Barriere loeschen
+                            updateDisplay();                                 
+                            break;                                                              //Schleife verlassen, weil durch erase ein Element fehlt...Dadurch ist barrier.size() um eins kleiner und es muss erneut von vorn kontrolliert werden
                     }
+                }
+                
                 }
 
             }
