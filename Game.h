@@ -60,6 +60,7 @@ class Game {
 
     //Display - Score + Text
     int score = 0;                          //Aktueller Punktestand
+    int highscore = 0;                      //Highscore, wird bei Gameover mit aktuellem Score verglichen und ggf aktualisiert
     int playerLivesAmount = 3;              //Anzahl Leben fuer Spieler
     bool gameOverStatus = false;            //Status Gameover
     const int scorePointsAlien = 20;        //Punkte pro Treffer
@@ -69,7 +70,8 @@ class Game {
     sf :: Text gameName;                    //Textfeld fuer Titel definieren
     sf :: Text scoreBoard;                  //Textfeld fuer Punktestand definieren
     sf :: Text playerLives;                 //Textfeld fuer Leben definieren
-    sf :: Text gameOverText;                //Textfeld bei Gameover
+    sf :: Text gameOverText;                //Textfeld fuer Gameover definieren
+    sf :: Text highScore;                   //Textfeld fuer Highscore definieren
     sf :: Text miniIntroduction;
     sf :: Text gameOverAddOn; 
     sf :: Text pausedText;

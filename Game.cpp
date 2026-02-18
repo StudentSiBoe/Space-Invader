@@ -97,15 +97,21 @@ void Game :: initDisplay() {                                                    
     gameOverText.setString("GAME OVER");                                            //Text definieren
     gameOverText.setFillColor(sf :: Color :: Red);                                  //Textfarbe definieren
 
+    highScore.setFont(font);                                                     //Textart zuweisen                             
+    highScore.setCharacterSize(100);                                             //Textgroesse definieren       
+    highScore.setString("HIGH SCORE: " + std::to_string(highscore));              //Text definieren
+    highScore.setFillColor(sf :: Color :: Cyan);                                  //Textfarbe definieren
+
+
     miniIntroduction.setFont(font);                                                 //Textart zuweisen
     miniIntroduction.setCharacterSize(55);                                          //Textgroesse definieren
     miniIntroduction.setString("Controlls: \n"
         "\n"
         "move Player left _ arrow key left \n"                                      //vielleicht Pfeil-Icons
-        "move Player right _ arrow key right \n"
+        "move Player right _  arrow key right \n"
         "Player shoots _ space \n"
-        "continue playing _ p\n"
-        "continue after Gameover _ r \n"
+        "continue playing _ P\n"
+        "continue after Gameover _ R \n"
         "\n"
         "\n"
         "Remake of Space Invaders Arcade \n"
@@ -138,6 +144,9 @@ void Game :: updateDisplay() {                                                  
 
     auto lP = playerLives.getLocalBounds();                                                         //Mase des Text-Rechtecks player
     playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);                       //10.f = Abstand zum Rand (fuer die Optik)
+
+    auto hS = highScore.getLocalBounds();
+    highScore.setPosition((fensterBreite - hS.width) / 2.f - hS.left, (fensterHoehe - hS.height) / 2.f - hS.top - 235.f);
 
     auto gOver = gameOverText.getLocalBounds();                                                     //Mase des Text-Rechtecks gameOver
     gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top - 55.f);     //Position fuer GameOver Textfeld mittig auf Fenster anzeigen
@@ -279,11 +288,11 @@ void Game :: run () {
                         barriers[i].damage(1);                                          //Barriere um 1 HP beschädigen
                         playershot->deactivate();
                         
-                        if (barriers[i].getHealthPoints() < 7 && barriers[i].getHealthPoints() > 4) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
+                        if (barriers[i].getHealthPoints() <= 5 && barriers[i].getHealthPoints() > 3) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
                             barriers[i].setColor(sf :: Color :: Yellow);                           //Farbe der Barriere auf Gelb aendern                                                    
                             updateDisplay();
                         }
-                        if (barriers[i].getHealthPoints() < 5 && barriers[i].getHealthPoints() > 0) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
+                        if (barriers[i].getHealthPoints() <= 3 && barriers[i].getHealthPoints() > 0) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
                             barriers[i].setColor(sf :: Color :: Red);                           //Farbe der Barriere auf Rot aendern                                                     
                             updateDisplay();
                         }
@@ -341,7 +350,7 @@ void Game :: run () {
                     blinkOn = true;                                                     //blinken an
                     player.setHitVisual(blinkOn);                                       //Methode zum blinken aufrufen mit true
                 }
-            //NEW - Alienshot killed Barrier    
+            //Alienshot killt Barrier    
             } else {
 
                 for (int j = 0; j < barriers.size(); j++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
@@ -349,11 +358,11 @@ void Game :: run () {
                         barriers[j].damage(1);                                          //Barriere um 1 HP beschädigen
                         alienShot->deactivate();
                         
-                        if (barriers[j].getHealthPoints() < 7 && barriers[j].getHealthPoints() > 4) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
+                        if (barriers[j].getHealthPoints() <= 5 && barriers[j].getHealthPoints() > 3) {                      //Wenn HP der Barriere kleiner als 7 aber groesser als 5, dann
                             barriers[j].setColor(sf :: Color :: Yellow);                           //Farbe der Barriere auf Gelb aendern                                                    
                             updateDisplay();
                         }
-                        if (barriers[j].getHealthPoints() < 5 && barriers[j].getHealthPoints() > 0) {                      //Wenn HP der Barriere kleiner als 10 aber groesser als 5, dann
+                        if (barriers[j].getHealthPoints() <= 3 && barriers[j].getHealthPoints() > 0) {                      //Wenn HP der Barriere kleiner als 5 aber groesser als 0, dann
                             barriers[j].setColor(sf :: Color :: Red);                           //Farbe der Barriere auf Rot aendern                                                     
                             updateDisplay();
                         }
@@ -412,6 +421,11 @@ void Game :: run () {
         }
         
         if (gameOverStatus && !paused) {                                                               //Textfeld ausgabe bei GameOver
+            if (score > highscore) {                                                        //Wenn Highscore gebrochen wurde
+                highscore = score;                                                          //Highscore wird zu Score
+                highScore.setString("HIGH SCORE: " + std::to_string(highscore));            //Highscore Text aktualisieren    
+            }
+            fenster.draw(highScore);
             fenster.draw(gameOverText);
             fenster.draw(gameOverAddOn);
         }
