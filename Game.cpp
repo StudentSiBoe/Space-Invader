@@ -420,10 +420,40 @@ void Game :: run () {
             fenster.draw(scoreBoard);
         }
         
-        if (gameOverStatus && !paused) {                                                               //Textfeld ausgabe bei GameOver
+        if (gameOverStatus && !paused) {                                                    //Textfeld ausgabe bei GameOver
             if (score > highscore) {                                                        //Wenn Highscore gebrochen wurde
                 highscore = score;                                                          //Highscore wird zu Score
                 highScore.setString("HIGH SCORE: " + std::to_string(highscore));            //Highscore Text aktualisieren    
+            
+                //Blinken des Highscores bei neuem Highscore
+                highScoreBlinkTimer = 0.f;
+                highScoreBlink = true;
+                if (highScoreBlink) {
+                    highScoreBlinkTimer += dt;
+                    TestTimer+= dt;
+                    highScore.setFillColor(sf :: Color :: Magenta);
+                    updateDisplay();   
+
+                    if (highScoreBlinkTimer >= highScoreBlinkInterval) {                          
+                    highScoreBlinkTimer = 0.f;                                                      
+                    highScoreBlink = !highScoreBlink;
+                    highScore.setFillColor(sf :: Color :: Cyan);
+                    updateDisplay();                                                   
+                    }
+                    
+                    if(TestTimer >= 100.0f){
+                        highScoreBlink = false;
+                        highScore.setFillColor(sf :: Color :: Cyan);
+                        updateDisplay();
+                    }
+                    
+                }
+                
+                
+
+                
+            
+            
             }
             fenster.draw(highScore);
             fenster.draw(gameOverText);
