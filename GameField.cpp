@@ -85,6 +85,57 @@ void GameField :: restartGame() {                                               
 
 GameField :: GameField (sf :: RenderWindow fenster) {
 
+
+game.h
+    //Blinken bei neuem HighScore
+    float highScoreBlinkTimer = 0.f;        //Zeit zwischen Farbwechseln
+    const float highScoreBlinkInterval = 40.f;      //Zeit bis Farbwechsel
+    bool highScoreBlink = false;            //Variable zum einschalten des Highscore Blinkens
+    float TestTimer = 0.f;                      //Test Timer
+
+game.cpp
+//Blinken des Highscores bei neuem Highscore
+                highScoreBlinkTimer = 0.f;
+                highScoreBlink = true;
+                if (highScoreBlink) {
+                    highScoreBlinkTimer += dt;
+                    TestTimer+= dt;
+                    highScore.setFillColor(sf :: Color :: Magenta);
+                    fenster.draw(highScore);
+                    updateDisplay();   
+
+                    if (highScoreBlinkTimer >= highScoreBlinkInterval) {                          
+                    highScoreBlinkTimer = 0.f;                                                      
+                    //highScoreBlink = !highScoreBlink;
+                    highScore.setFillColor(sf :: Color :: Cyan);
+                    fenster.draw(highScore);
+                    updateDisplay();                                                   
+                    }
+                    
+                    if(TestTimer >= 100.0f){
+                        highScoreBlink = false;
+                        highScore.setFillColor(sf :: Color :: Cyan);
+                        fenster.draw(highScore);
+                        updateDisplay();
+                    }
+                    
+                }
+
+                
+
+    OPTIONALE ANPASSUNG fuer Event Schleife, damit Space-Taste nicht gehalten werden kann (isKeypressed -> Keypressed)
+    while (fenster.pollEvent(event)) {
+    if (event.type == sf::Event::Closed)
+        fenster.close();
+
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+            // EINMALIG pro Druck
+            shotRequested = true;
+        }
+    }
+
+      
+
     //Groesse festlegen
     //BAUSTELLE xD
 }

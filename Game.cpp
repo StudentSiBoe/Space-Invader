@@ -10,7 +10,6 @@
 void Game :: buildBarriers() {                                                        
     barriers.clear();                                                               //Erstmal aufräumen
     int hp = 10;                                                                    //Definieren der Trefferpunkte
-    int damage = 0;                                                                 //???
 
     const int rows = 1;                                                             //Anzahl Reihen nach unten (y)
     const int cols = 4;                                                             //Anzahl Spalten nach rechts (x)
@@ -25,7 +24,7 @@ void Game :: buildBarriers() {
         for (int j = 0; j < cols; j++) {                                            //Schleife - Spalten durchgehen 
             float x = startX + j * gapX;                                            //X - Position fuer Barrieren Platzierung
             float y = startY + i * gapY;                                            //Y - Position fuer Barrieren Platzierung
-            barriers.emplace_back(x, y);                                            //Positionen (x,y) weitergeben
+            barriers.emplace_back(x, y);                                            //Positionen (x,y) weitergeben an Barrier Klasse
         }
     }
 }
@@ -46,7 +45,7 @@ void Game :: buildAliens() {
         for (int j = 0; j < cols; j++) {                                            //Schleife - Spalten durchgehen 
             float x = startX + j * gapX;                                            //X - Position fuer Alien Plazierung
             float y = startY + i * gapY;                                            //Y - Position fuer Alien Plazierung
-            aliens.emplace_back(x, y);                                              //Positionen (x,y) weitergeben
+            aliens.emplace_back(x, y);                                              //Positionen (x,y) weitergeben an Alien Klasse
         }
     }
 }
@@ -131,19 +130,19 @@ void Game :: initDisplay() {
 } 
 //Methode fuer die Display-Aktualisierung und Positionierung der Textfelder
 void Game :: updateDisplay() {                                                                      
-    scoreBoard.setString("SCORE:\n" + std :: to_string(score));                                                                     //Textausgabe als String -> Umwandelung Int Score in einen String
-    scoreBoard.setPosition(10.f, 10.f);                                                                                             //Position fuer das Score-Textfeld definieren (x,y)
+    scoreBoard.setString("SCORE:\n" + std :: to_string(score));                             //Textausgabe als String -> Umwandelung Int Score in einen String
+    scoreBoard.setPosition(10.f, 10.f);                                                     //Position fuer das Score-Textfeld definieren (x,y)
 
-    playerLives.setString("LIVES:\n" + std :: to_string(playerLivesAmount));                                                        //Int Playerleben Variable im Textfeld anzeigen
+    playerLives.setString("LIVES:\n" + std :: to_string(playerLivesAmount));                //Int Playerleben Variable im Textfeld anzeigen
 
-    float fensterBreite = static_cast<float>(fenster.getSize().x);                                                                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln) als Temp-Variable
-    float fensterHoehe = static_cast<float>(fenster.getSize().y);                                                                   //Hoehe des gesamten Fensters als Temp-Variable
+    float fensterBreite = static_cast<float>(fenster.getSize().x);                          //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln) als Temp-Variable
+    float fensterHoehe = static_cast<float>(fenster.getSize().y);                           //Hoehe des gesamten Fensters als Temp-Variable
 
-    auto titel = gameName.getLocalBounds();                                                                                         //Mase des Textfeld-Rechtecks title
-    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 10.f, 2.f);                                             //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
+    auto titel = gameName.getLocalBounds();                                                 //Mase des Textfeld-Rechtecks title
+    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 10.f, 2.f);     //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
 
-    auto lP = playerLives.getLocalBounds();                                                                                         //auto entspricht dem Ausdruck: sf :: FloatRect TEXTFELD = ...
-    playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);                                                       //10.f = Abstand zum Rand (fuer die Optik)
+    auto lP = playerLives.getLocalBounds();                                                 //auto entspricht dem Ausdruck: sf :: FloatRect TEXTFELD = ...
+    playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);               //10.f = Abstand zum Rand (fuer die Optik)
 
     auto hS = highScore.getLocalBounds();
     highScore.setPosition((fensterBreite - hS.width) / 2.f - hS.left, (fensterHoehe - hS.height) / 2.f - hS.top - 235.f);
@@ -387,7 +386,7 @@ void Game :: run () {
             }
         }
         
-        if (invincible && !paused) {                                                               //Wenn unverwundbar, dann
+            if (invincible && !paused) {                                                               //Wenn unverwundbar, dann
             invincibleTimer += dt;                                                      //Timer hochzaehlen fuer unverwundbar sein
             blinkTimer += dt;                                                           //Timer hochzaehlen fuer blinken
 
@@ -425,36 +424,6 @@ void Game :: run () {
             if (score > highscore) {                                                        //Wenn Highscore gebrochen wurde
                 highscore = score;                                                          //Highscore wird zu Score
                 highScore.setString("HIGH SCORE: " + std::to_string(highscore));            //Highscore Text aktualisieren    
-            
-                //Blinken des Highscores bei neuem Highscore
-                highScoreBlinkTimer = 0.f;
-                highScoreBlink = true;
-                if (highScoreBlink) {
-                    highScoreBlinkTimer += dt;
-                    TestTimer+= dt;
-                    highScore.setFillColor(sf :: Color :: Magenta);
-                    updateDisplay();   
-
-                    if (highScoreBlinkTimer >= highScoreBlinkInterval) {                          
-                    highScoreBlinkTimer = 0.f;                                                      
-                    highScoreBlink = !highScoreBlink;
-                    highScore.setFillColor(sf :: Color :: Cyan);
-                    updateDisplay();                                                   
-                    }
-                    
-                    if(TestTimer >= 100.0f){
-                        highScoreBlink = false;
-                        highScore.setFillColor(sf :: Color :: Cyan);
-                        updateDisplay();
-                    }
-                    
-                }
-                
-                
-
-                
-            
-            
             }
             fenster.draw(highScore);
             fenster.draw(gameOverText);
@@ -465,23 +434,3 @@ void Game :: run () {
 
     }
 }
-
-
-
-
-
-
-/*
-    OPTIONALE ANPASSUNG fuer Event Schleife, damit Space-Taste nicht gehalten werden kann (isKeypressed -> Keypressed)
-    while (fenster.pollEvent(event)) {
-    if (event.type == sf::Event::Closed)
-        fenster.close();
-
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
-            // EINMALIG pro Druck
-            shotRequested = true;
-        }
-    }
-
-      
-*/

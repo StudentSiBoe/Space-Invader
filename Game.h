@@ -53,11 +53,6 @@ class Game {
     const float blinkInterval = 0.15f;      //Zeit bis Farbwechsel
     bool blinkOn = false;                   //Variable zum einschalten des blinkens
 
-    //Blinken bei neuem HighScore
-    float highScoreBlinkTimer = 0.f;        //Zeit zwischen Farbwechseln
-    const float highScoreBlinkInterval = 0.3f;      //Zeit bis Farbwechsel
-    bool highScoreBlink = false;            //Variable zum einschalten des Highscore Blinkens
-    float TestTimer = 0.f;                      //Test Timer
 
     //Zusatz Methoden / Funktionen
     void restartGame();                     //Reset Spielfeld nach Lose
