@@ -214,15 +214,16 @@ void Game :: pauseGame() {
 void Game :: run () {
     srand(static_cast<unsigned int>(time(nullptr)));                                //Start der Zufallsfolge setzen (seed) fuer rand(), time gibt aktuelle Zeit (time) -> cast in int (fuer srand)                        
 
-    sf :: Clock clock;
+    sf :: Clock clock;                                                              //Uhr implementieren und Objekt anlegen
     
     fenster.setFramerateLimit(60);                                                  //FPS einstellen
 
-    initDisplay();
+    initDisplay();                                                                  //Textfelder laden 
 
-    buildAliens();                                                                  //Aufruf - Bau Alien-Reihen
+    buildAliens();                                                                  //Aufruf Alien Front Methode
 
-    buildBarriers();    
+    buildBarriers();                                                                //Aufruf Barrieren Methode    
+
     while (fenster.isOpen()) {                                                      //Feedback vom fenster (es existiert)
         sf :: Event event;                                                          //Variable event zum abfangen von befehlen
                                                                                     
@@ -230,11 +231,11 @@ void Game :: run () {
             if (event.type == sf :: Event :: Closed) {                              //Bei Anwahl x Fenster schliessen
                 fenster.close();
             }
-            if (event.type == sf :: Event :: KeyPressed) {
+            if (event.type == sf :: Event :: KeyPressed) {                          //Abfrage Tastendruck - Event esc bzw P fuer Pause Menu
                 if (event.key.code == sf :: Keyboard :: P || event.key.code == sf :: Keyboard :: Escape) {
                     pauseGame();
                 }
-                if (gameOverStatus && event.key.code == sf :: Keyboard :: R) {
+                if (gameOverStatus && event.key.code == sf :: Keyboard :: R) {      //Abfrage Tastendruck - Event R bei GameOver Status zum Reseten/Neustart
                     restartGame();
                 }
             }    
@@ -252,11 +253,11 @@ void Game :: run () {
             } 
         }
 
-        if (!gameOverStatus && !hitPause && !paused) {                                                 //Spiel laeuft, wenn kein Gameover oder Treffer am Spieler
+        if (!gameOverStatus && !hitPause && !paused) {                                      //Spiel laeuft, wenn kein Gameover oder Treffer am Spieler
             
             player.handleInput();                                                           //Eingaben vom Player bzw. Bewegungssteuerung                                                           
             
-                                                                                            //Schuss Abfrage (es kann nur einen Schuss geben)
+ //Spielerschuss Abfrage/Kontrolle (es kann nur einen Schuss geben)
             if (player.shotRequest()) {                                                     //Wenn Space-Taste gedrueckt, shotRequest gibt true zurueck
                 if(!playershot.has_value() || !playershot->isActive()) {                    //Wenn kein Schuss existiert (has_value) ODER kein Schuss aktiviert (noch fliegt/isActive) ist
                     sf :: Vector2f pos = player.shotStartPosition();                        //Neue Start-Pos fuer neuen Schuss ermitteln
@@ -264,13 +265,13 @@ void Game :: run () {
                 }
                 player.processShotRequest();                                                //Nach dem Schuss wird der Schussaufruf wieder auf false gesetzt
             }
-
+//Positionsaktualisierung Spieler & Aliens
             player.update(dt, static_cast<float>(fenster.getSize().x));                     //deltaTime und Breite des Feldes uebergeben an Positionspruefung 
             updateAliens(dt);                                                               //Aufruf Alien update Methode mit delta Time
 
             tryAlienShoot(dt);
-
-            if (playershot.has_value() && playershot->isActive() && !paused) {                         //Player - Schuss existiert und ist aktiv
+//Trefferabfrage Spieler -> Alien
+            if (playershot.has_value() && playershot->isActive() && !paused) {              //Player - Schuss existiert und ist aktiv
                 playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
 
                 for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
