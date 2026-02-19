@@ -159,7 +159,7 @@ void Game :: updateDisplay() {
     auto pause = pausedText.getLocalBounds();
     pausedText.setPosition((fensterBreite - pause.width) / 2.f - pause.left, 2.f);
 } 
-
+//Methode um Alienschuss-Muster zu erzeugen
 void Game :: tryAlienShoot(float dt) {                                              //Alien Schuss Berechnung... Alien Auswahl + Start Koordinaten berechnen 
     alienShootTimer += dt;                                                          //Timer erhoehen in jedem Frame
 
@@ -181,7 +181,7 @@ void Game :: tryAlienShoot(float dt) {                                          
     alienShootInterval = 0.9f + static_cast<float>(rand()) / RAND_MAX * 1.2f;       //Die Zufallszahl wird mit rand() von 0 bis RAND_MAX erzeugt... Normieren durch / -> 0..1 + &* -> 0,9 bis 2.1
                                                                                     //Schuss ist nicht vorhersehbar, macht Spiel schwerer (kein Muster)
 }
-
+//Spielneustart nach GameOver (Alles neu Laden)
 void Game :: restartGame() {                                                        //Option zum Restart bei Gameover und R
     gameOverStatus = false;                                                         //Alle Kontroll-Variablen zuruecksetzen
     hitPause = false;
@@ -203,7 +203,7 @@ void Game :: restartGame() {                                                    
 
     updateDisplay();                                                                //Alle Resets anzeigen
 } 
-
+//Methode zum Wechsel in den Pausezustand
 void Game :: pauseGame() {
     paused = !paused;
 }
@@ -269,10 +269,10 @@ void Game :: run () {
             updateAliens(dt);                                                               //Aufruf Alien update Methode mit delta Time
 
             tryAlienShoot(dt);
-//Trefferabfrage Spieler -> Alien
+//Abfrage ob ein Schuss vom Spieler auf dem Feld ist
             if (playershot.has_value() && playershot->isActive() && !paused) {              //Player - Schuss existiert und ist aktiv
                 playershot->update(dt);                                                     //Updated die Position des Schusses pro Frame
-
+//Trefferabfrage Spieler -> Alien
                 for (int i = 0; i < aliens.size(); i++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
                     if (playershot->hitbox().intersects(aliens[i].hitbox())) {              //Pruefe mit intersects(SFLM-Fkt zum testen, schneiden sich zwei Rechtecke), indem Fall schneidet sich die Hitbox des Schusses mit einem Alien[i]
                         aliens.erase(aliens.begin() + i);                                   //Treffer -> ALSO: loesche das Alien bei [i], begin()...Art Zeiger auf erstes Element, darum begin() + i, um aktuelles Alien zu loeschen
@@ -304,32 +304,32 @@ void Game :: run () {
                 }
             }
 
-
+//Schuss verlaesst Spielfeld
                 if (playershot->upperLimit() < 130.f) {                                     //Wenn Schuss ist hinter festgelegter Grenze, deaktivieren
                     playershot->deactivate();                                               //Schaltet den Schuss aus 
                 }            
             }    
         }   
-        
-        if (aliens.empty() && !paused) {                                                       //Wenn keine Aliens mehr in dem Fenster sind
+//Aufbau neue Front wenn alle Aliens eliminiert sind        
+        if (aliens.empty() && !paused) {                                            //Wenn keine Aliens mehr in dem Fenster sind
             if (playerLivesAmount < 3) {                                            //Wenn Spieler keine 3 Leben, dann
                 playerLivesAmount += 1;                                             //1 Leben dazu 
                 updateDisplay();                                                    //Display aktualisieren
             } 
             buildAliens();                                                          //DANN erstelle erneut eine Formation
         }
-
+//Abfrage ob ein Alienschuss auf dem Feld ist
         if (alienShot.has_value() && alienShot->isActive()&& !paused) {      
             alienShot->update(dt);
-
+//Alienschuss verlaesst Spielfeld
             if (alienShot->lowerLimit() > static_cast<float>(fenster.getSize().y)) {    //Schuss verlässt Spielfeld / ueber Fenstergroesse hinaus
                 alienShot->deactivate();
-
+//Alienschuss trifft den Spieler
             } else if (alienShot->hitbox().intersects(player.hitbox())) {               //Treffer am Spieler registriert
                 alienShot->deactivate();
                 playerLivesAmount -= 1;                                                 //Spielerleben um 1 verringern
                 updateDisplay();                                                        //Display / Lebensanzeige aktualisieren
-
+//Abfrage auf GameOver
                 if (playerLivesAmount <= 0) {                                           //Check ob Spieler noch Leben hat
                     gameOverStatus = true;                                              //Wenn nicht -> Gameover
                     invincible = true;                                                  //Unverwundbarkeitsphase an
@@ -338,7 +338,7 @@ void Game :: run () {
                     blinkTimer = 0.f;                                                   //Blink Zeit startet
                     blinkOn = true;                                                     //blinken an
                     player.setHitVisual(blinkOn);                                       //Methode zum blinken aufrufen mit true
-                    
+//Trefferanimation (Treffer am Spieler)                    
                 } else {                                                                //TREFFER Anzeige
                     hitPause = true;                                                    //ANSONSTEN Stopp/stehen an (Player bleibt stehen)
                     hitPauseTimer = 0.f;                                                //Start Standzeit
@@ -350,7 +350,7 @@ void Game :: run () {
                     blinkOn = true;                                                     //blinken an
                     player.setHitVisual(blinkOn);                                       //Methode zum blinken aufrufen mit true
                 }
-            //Alienshot killt Barrier    
+//Alienshot killt Barrier    
             } else {
 
                 for (int j = 0; j < barriers.size(); j++) {                                   //solange i kleiner wie Anzahl der existierenden Aliens ist
@@ -377,7 +377,7 @@ void Game :: run () {
 
             }
         }
-
+//GameOver wenn Aliens an unterer Feldgrenze
         for (const Alien& a : aliens) {                                                 //Kontrolle, erreicht ein Alien (alle Aliens) den Spieler
             float loseLineY = player.spielerPosY;                                       //Linie auf Hoehe des Spielers um Gameover zu ermitteln
             if (a.bottom() >= loseLineY) {
@@ -385,8 +385,8 @@ void Game :: run () {
                 break;
             }
         }
-        
-            if (invincible && !paused) {                                                               //Wenn unverwundbar, dann
+//Timer fuer Trefferanimation        
+        if (invincible && !paused) {                                                    //Wenn unverwundbar, dann
             invincibleTimer += dt;                                                      //Timer hochzaehlen fuer unverwundbar sein
             blinkTimer += dt;                                                           //Timer hochzaehlen fuer blinken
 
@@ -400,7 +400,7 @@ void Game :: run () {
                 player.setHitVisual(invincible);                                        //Ausgangsfarbe wieder einstellen
             }
         }
-        //RenderWindow / fenster befüllen 
+//RenderWindow / In das Fenster zeichnen  
         fenster.clear();
 
         if (paused) {
