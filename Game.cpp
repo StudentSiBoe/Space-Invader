@@ -3,23 +3,23 @@
 #include <iostream>
 #include <string>
 
-//Highscore Boe: 13140
+//Highscore Boe: 13140      Jasmin: 10070
 //Highscore Simon: 21180
 
-
-void Game :: buildBarriers() {                                                        //Aufbau der Barrieren
-    barriers.clear();                                                                 //Erstmal aufräumen
-    int hp = 10;
-    int damage = 0;
+//Methode zum Aufbau der Barrieren 
+void Game :: buildBarriers() {                                                        
+    barriers.clear();                                                               //Erstmal aufräumen
+    int hp = 10;                                                                    //Definieren der Trefferpunkte
+    int damage = 0;                                                                 //???
 
     const int rows = 1;                                                             //Anzahl Reihen nach unten (y)
-    const int cols = 4;                                                            //Anzahl Spalten nach rechts (x)
+    const int cols = 4;                                                             //Anzahl Spalten nach rechts (x)
 
-    const float startX = 75.f;                                                     //Start X Koordinate erster Barriere
+    const float startX = 75.f;                                                      //Start X Koordinate erster Barriere
     const float startY = 750.f;                                                     //Start Y Koordinate erster Barriere
 
-    const float gapX = 225.f;                                               //Abstand X zwischen zwei Barrieren
-    const float gapY = 0.f;                                                        //Abstand Y zwischen zwei Barrieren
+    const float gapX = 225.f;                                                       //Abstand X zwischen zwei Barrieren
+    const float gapY = 0.f;                                                         //Abstand Y zwischen zwei Barrieren
 
     for (int i = 0; i < rows; i++) {                                                //Schleife - Reihen durchlaufen 
         for (int j = 0; j < cols; j++) {                                            //Schleife - Spalten durchgehen 
@@ -29,8 +29,8 @@ void Game :: buildBarriers() {                                                  
         }
     }
 }
-
-void Game :: buildAliens() {                                                        //Aufbau der Alien Reihen
+//Methode zum Aufbau der Alienfront
+void Game :: buildAliens() {                                                        
     aliens.clear();                                                                 //Erstmal aufräumen
 
     const int rows = 5;                                                             //Anzahl Reihen nach unten (y)
@@ -50,33 +50,33 @@ void Game :: buildAliens() {                                                    
         }
     }
 }
+//Methode fuer die Alienbewegung bzw. Positions Aktualisierung
+void Game :: updateAliens(float dt) {                                               
+    float moveX = alienDirection * alienSpeed * dt;                                             //Bewegung in X-Richtung (Bestehend aus Richtung, Geschwindigkeit und delta Time)
+    bool border = false;                                                                        //Grenze des Fensters anlegen (Bewegungsgrenze)
 
-void Game :: updateAliens(float dt) {                                               //Positions Aktualisierung der Aliens
-    float moveX = alienDirection * alienSpeed * dt;                                 //Bewegung in X-Richtung (Bestehend aus Richtung, Geschwindigkeit und delta Time)
-    bool border = false;                                                            //Grenze des Fensters anlegen (Bewegungsgrenze)
-
-    for (const Alien& a : aliens) {
-        if (alienDirection > 0 && a.right() >= static_cast<float>(fenster.getSize().x)) {               //Alienbewegung nach rechts (Direction +) UND rechte Kante des Aliens ist an / ueber der Fenstergroesse (rechte Kante)
-            border = true;                                                          //DANN setze die Grenze 
+    for (const Alien& a : aliens) {                                                             //Alle Aliens durchgehen und kontrollieren:
+        if (alienDirection > 0 && a.right() >= static_cast<float>(fenster.getSize().x)) {       //WENN sich die Aliens nach rechts bewegen & die rechte Kante eines Aliens sich mit der rechten Fensterbegrenzung schneidet:
+            border = true;                                                                      //DANN setze die Begrenzung 
         }
-        if (alienDirection < 0 && a.left() <= 0.f) {                                //Alienbewegung nach links (Direction -) UND linke Kante des Aliens ist an /ueber dem beginn des Fensters (linke Kante) 
-            border = true;                                                          //DANN setze die Grenze
+        if (alienDirection < 0 && a.left() <= 0.f) {                                            //WENN sich die Aliens nach links bewegen & die linke Kante eines Aliens sich mit der linken Fensterbegrenzung schneidet:
+            border = true;                                                                      //DANN setze die Begrenzung
         }                                  
     }
 
-    if (border) {                                                                   //Wenn die Grenze erreicht ist
-        for (Alien& a : aliens) {                                                   //Jedes Alien soll:
-            a.move(0.f, alienDrop);                                                 //Nach unten (Y) um den vorgegebenen Wert alienDrop bewegt werden
+    if (border) {                                                                               //WENN ein Alien am rechten oder linken Spielfeldrand ist (border == true)
+        for (Alien& a : aliens) {                                                               //DANN soll jedes Alien:
+            a.move(0.f, alienDrop);                                                             //Nach unten (Y) um den vorgegebenen Wert "alienDrop" bewegt werden
         }
-        alienDirection *= -1.f;                                                     //Danach wird die Bewegungsrichtung umgedreht
-    } else {                                                                        //Solange keine Grenze erreicht ist
-        for (Alien& a : aliens) {                                                   //Soll sich jedes Alien
-            a.move(moveX, 0.f);                                                     //Um die errechnete Bewegungseinheit auf X bewegen
+        alienDirection *= -1.f;                                                                 //Danach wird die Bewegungsrichtung umgekehrt
+    } else {                                                                                    //Solange kein Alien eine Begrenzung erreicht hat
+        for (Alien& a : aliens) {                                                               //Soll sich jedes Alien
+            a.move(moveX, 0.f);                                                                 //Um die errechnete Bewegungseinheit auf X bewegen
         }
     }
 }
-
-void Game :: initDisplay() {                                                        //Definieren der Texteigenschaften - Display
+//Methode fuer die Erzeugung der Textfelder
+void Game :: initDisplay() {                                                        
     font.loadFromFile("assets/fonts/zephyrean-brk.ttf");                            //Textart laden
 
     gameName.setFont(font);                                                         //Textart zuweisen
