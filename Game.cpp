@@ -86,11 +86,11 @@ void Game :: initDisplay() {                                                    
 
     scoreBoard.setFont(font);                                                       //Textart zuweisen
     scoreBoard.setCharacterSize(45);                                                //Textgroesse definieren
-    scoreBoard.setFillColor(sf :: Color :: Cyan);                                 //Textfarbe definieren
+    scoreBoard.setFillColor(sf :: Color :: Cyan);                                   //Textfarbe definieren
 
     playerLives.setFont(font);                                                      //Textart zuweisen
     playerLives.setCharacterSize(45);                                               //Textgroesse definieren
-    playerLives.setFillColor(sf :: Color :: Cyan);                                //Textfarbe definieren
+    playerLives.setFillColor(sf :: Color :: Cyan);                                  //Textfarbe definieren
 
     gameOverText.setFont(font);                                                     //Textart zuweisen                             
     gameOverText.setCharacterSize(180);                                             //Textgroesse definieren       
