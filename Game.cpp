@@ -77,34 +77,34 @@ void Game :: updateAliens(float dt) {
 }
 //Methode fuer die Erzeugung der Textfelder
 void Game :: initDisplay() {                                                        
-    font.loadFromFile("assets/fonts/zephyrean-brk.ttf");                            //Textart laden
+    font.loadFromFile("assets/fonts/zephyrean-brk.ttf");                            //Schriftart aus der ...ttf Datei in ein font Objekt laden 
 
-    gameName.setFont(font);                                                         //Textart zuweisen
-    gameName.setCharacterSize(115);                                                  //Textgroesse definieren
-    gameName.setString("SPACE INVADERS");                                           //Text definieren
-    gameName.setFillColor(sf :: Color :: Green);                                    //Textfarbe definieren
+    gameName.setFont(font);                                                         //Textfeld "gameName" die Schriftart zuweisen
+    gameName.setCharacterSize(115);                                                 //Textgroesse vom Textfeld "gameName" definieren
+    gameName.setString("SPACE INVADERS");                                           //Text vom Textfeld "gameName" definieren
+    gameName.setFillColor(sf :: Color :: Green);                                    //Textfarbe vom Textfeld "gameName" definieren
 
-    scoreBoard.setFont(font);                                                       //Textart zuweisen
-    scoreBoard.setCharacterSize(45);                                                //Textgroesse definieren
-    scoreBoard.setFillColor(sf :: Color :: Cyan);                                   //Textfarbe definieren
+    scoreBoard.setFont(font);                                                       //Textfeld "scoreBoard" Textart zuweisen
+    scoreBoard.setCharacterSize(45);                                                //Textgroesse vom Textfeld "scoreBoard" definieren
+    scoreBoard.setFillColor(sf :: Color :: Cyan);                                   //Textfarbe vom Textfeld "scoreBoard" definieren
 
-    playerLives.setFont(font);                                                      //Textart zuweisen
-    playerLives.setCharacterSize(45);                                               //Textgroesse definieren
-    playerLives.setFillColor(sf :: Color :: Cyan);                                  //Textfarbe definieren
+    playerLives.setFont(font);                                                      //Eigenschaften vom Textfeld "playerLives" festlegen
+    playerLives.setCharacterSize(45);                                               
+    playerLives.setFillColor(sf :: Color :: Cyan);                                  
 
-    gameOverText.setFont(font);                                                     //Textart zuweisen                             
-    gameOverText.setCharacterSize(180);                                             //Textgroesse definieren       
-    gameOverText.setString("GAME OVER");                                            //Text definieren
-    gameOverText.setFillColor(sf :: Color :: Red);                                  //Textfarbe definieren
+    gameOverText.setFont(font);                                                     //Eigenschaften vom Textfeld "gameOverText" festlegen
+    gameOverText.setCharacterSize(180);                                             
+    gameOverText.setString("GAME OVER");                                            
+    gameOverText.setFillColor(sf :: Color :: Red);                                  
 
-    highScore.setFont(font);                                                     //Textart zuweisen                             
-    highScore.setCharacterSize(100);                                             //Textgroesse definieren       
-    highScore.setString("HIGH SCORE: " + std::to_string(highscore));              //Text definieren
-    highScore.setFillColor(sf :: Color :: Cyan);                                  //Textfarbe definieren
+    highScore.setFont(font);                                                        //Eigenschaften vom Textfeld "highScore" festlegen                             
+    highScore.setCharacterSize(100);                                             
+    highScore.setString("HIGH SCORE: " + std::to_string(highscore));             
+    highScore.setFillColor(sf :: Color :: Cyan);                                 
 
 
-    miniIntroduction.setFont(font);                                                 //Textart zuweisen
-    miniIntroduction.setCharacterSize(55);                                          //Textgroesse definieren
+    miniIntroduction.setFont(font);                                                 //Eigenschaften vom Textfeld "miniIntroduction" festlegen
+    miniIntroduction.setCharacterSize(55);                                          
     miniIntroduction.setString("Controlls: \n"
         "\n"
         "move Player left _ arrow key left \n"                                      //vielleicht Pfeil-Icons
@@ -115,47 +115,47 @@ void Game :: initDisplay() {
         "\n"
         "\n"
         "Remake of Space Invaders Arcade \n"
-        "made by: Boerge + Simon : )");      //Text definieren       
-    miniIntroduction.setFillColor(sf :: Color :: Magenta);                           //Textfarbe definieren
+        "made by: Boerge + Simon : )");             
+    miniIntroduction.setFillColor(sf :: Color :: Magenta);                           
 
-    gameOverAddOn.setFont(font);                                                    //Textart zuweisen
-    gameOverAddOn.setCharacterSize(80);                                             //Textgroesse definieren
-    gameOverAddOn.setString("to continue press: R");                                //Text definieren
-    gameOverAddOn.setFillColor(sf :: Color :: Red);                                 //Textfarbe definieren
+    gameOverAddOn.setFont(font);                                                    //Eigenschaften vom Textfeld "gameOverAddOn" festlegen
+    gameOverAddOn.setCharacterSize(80);                                             
+    gameOverAddOn.setString("to continue press: R");                                
+    gameOverAddOn.setFillColor(sf :: Color :: Red);                                 
 
-    pausedText.setFont(font);
+    pausedText.setFont(font);                                                       //Eigenschaften vom Textfeld "pausedText" festlegen
     pausedText.setCharacterSize(115);
     pausedText.setString("PAUSE MENU");
     pausedText.setFillColor(sf :: Color :: Magenta);
-    updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung
+    updateDisplay();                                                                //Aufruf der Text-Update Methode fuer Score Aenderung + Text-Positionierung
 } 
+//Methode fuer die Display-Aktualisierung und Positionierung der Textfelder
+void Game :: updateDisplay() {                                                                      
+    scoreBoard.setString("SCORE:\n" + std :: to_string(score));                                                                     //Textausgabe als String -> Umwandelung Int Score in einen String
+    scoreBoard.setPosition(10.f, 10.f);                                                                                             //Position fuer das Score-Textfeld definieren (x,y)
 
-void Game :: updateDisplay() {                                                                      //Aktualiert staendig den Score 
-    scoreBoard.setString("SCORE:\n" + std :: to_string(score));                                      //Textausgabe im SFML, darum muss der Int Score in einen String gewandelt werden...
-    scoreBoard.setPosition(10.f, 10.f);                                                             //Position fuer Score definieren (x,y)
+    playerLives.setString("LIVES:\n" + std :: to_string(playerLivesAmount));                                                        //Int Playerleben Variable im Textfeld anzeigen
 
-    playerLives.setString("LIVES:\n" + std :: to_string(playerLivesAmount));                         //Playerleben mit der int Variable anzeigen
+    float fensterBreite = static_cast<float>(fenster.getSize().x);                                                                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln) als Temp-Variable
+    float fensterHoehe = static_cast<float>(fenster.getSize().y);                                                                   //Hoehe des gesamten Fensters als Temp-Variable
 
-    float fensterBreite = static_cast<float>(fenster.getSize().x);                                  //Breite des gesamten Fensters (Size in pixel bzw int darum in float umwandeln)
-    float fensterHoehe = static_cast<float>(fenster.getSize().y);                                   //Hoehe des gesamten Fensters
+    auto titel = gameName.getLocalBounds();                                                                                         //Mase des Textfeld-Rechtecks title
+    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 10.f, 2.f);                                             //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
 
-    auto titel = gameName.getLocalBounds();                                                         //Mase des Text-Rechtecks title
-    gameName.setPosition((fensterBreite - titel.width) / 2.f - titel.left + 10.f, 2.f);             //Position fuer Game Titel (x,y), Mathematisch berechnen - Offset (Textfeld Versatz links)
-
-    auto lP = playerLives.getLocalBounds();                                                         //Mase des Text-Rechtecks player
-    playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);                       //10.f = Abstand zum Rand (fuer die Optik)
+    auto lP = playerLives.getLocalBounds();                                                                                         //auto entspricht dem Ausdruck: sf :: FloatRect TEXTFELD = ...
+    playerLives.setPosition(fensterBreite - lP.width - 10.f - lP.left, 10.f);                                                       //10.f = Abstand zum Rand (fuer die Optik)
 
     auto hS = highScore.getLocalBounds();
     highScore.setPosition((fensterBreite - hS.width) / 2.f - hS.left, (fensterHoehe - hS.height) / 2.f - hS.top - 235.f);
 
-    auto gOver = gameOverText.getLocalBounds();                                                     //Mase des Text-Rechtecks gameOver
-    gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top - 55.f);     //Position fuer GameOver Textfeld mittig auf Fenster anzeigen
+    auto gOver = gameOverText.getLocalBounds();                                                     
+    gameOverText.setPosition((fensterBreite - gOver.width) / 2.f - gOver.left, (fensterHoehe - gOver.height) / 2.f - gOver.top - 55.f);     
 
-    auto gAdd = gameOverAddOn.getLocalBounds();                                                                                             //Mase des Text-Rechtecks GameOver Zusatz Text
-    gameOverAddOn.setPosition((fensterBreite - gAdd.width) / 2.f - gAdd.left, (fensterHoehe / 2.f + gOver.height / 2.f) - 15.f);            //Position fuer den GameOver Zusatz ermitteln
+    auto gAdd = gameOverAddOn.getLocalBounds();                                                                                             
+    gameOverAddOn.setPosition((fensterBreite - gAdd.width) / 2.f - gAdd.left, (fensterHoehe / 2.f + gOver.height / 2.f) - 15.f);            
 
-    auto mI = miniIntroduction.getLocalBounds();                                                                                            //Mase des Text-Rechtecks miniIntroduction
-    miniIntroduction.setPosition((fensterBreite - mI.width) / 2.f - mI.left, (fensterHoehe - mI.height) / 2.f);                             //Position fuer die miniIntroduction ermiteln
+    auto mI = miniIntroduction.getLocalBounds();                                                                                            
+    miniIntroduction.setPosition((fensterBreite - mI.width) / 2.f - mI.left, (fensterHoehe - mI.height) / 2.f);                             
 
     auto pause = pausedText.getLocalBounds();
     pausedText.setPosition((fensterBreite - pause.width) / 2.f - pause.left, 2.f);
