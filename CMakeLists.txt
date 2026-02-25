@@ -1,39 +1,52 @@
 cmake_minimum_required(VERSION 3.10)
-
-# 1. Projektname
 project(SpaceInvader)
 
-# 2. C++ Standard festlegen
+# 1. C++ Standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 3. SFML PFAD ANPASSEN (Windows-spezifisch)
-if(WIN32)
-    # Dein Pfad für Windows
-    set(SFML_DIR "C:/libs/SFML/lib/cmake/SFML")
-    set(CMAKE_PREFIX_PATH ${SFML_DIR})
-endif()
+# 2. PFADE DEFINIEREN (SFML Ordner -> Unterordner)
+# Wir nutzen CMAKE_CURRENT_SOURCE_DIR, damit es auf jedem PC funktioniert
+set(SFML_BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/SFML")
+set(SFML_INCLUDE_DIR "${SFML_BASE_DIR}/SFML_include")
+set(SFML_LIB_DIR "${SFML_BASE_DIR}/SFML_lib")
 
-# 4. SFML Module suchen
-# Auf Linux wird dies automatisch im System gefunden
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
-
-# 5. Alle .cpp Dateien im Verzeichnis finden
+# 3. Quellen finden
 file(GLOB SOURCES "*.cpp")
 
-# 6. Die EXE erstellen
+# 4. EXE erstellen
 add_executable(SpaceInvader ${SOURCES})
 
-# 7. Header-Verzeichnisse (damit .h Dateien gefunden werden)
-target_include_directories(SpaceInvader PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+# 5. Header-Verzeichnisse (Hier liegen deine .hpp Dateien)
+target_include_directories(SpaceInvader PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${SFML_INCLUDE_DIR}
+)
 
-# 8. SFML Bibliotheken verknüpfen
-target_link_libraries(SpaceInvader sfml-graphics sfml-window sfml-system)
+# 6. Bibliotheken verknüpfen
+# Wir sagen CMake, wo die .a Dateien liegen
+target_link_directories(SpaceInvader PRIVATE ${SFML_LIB_DIR})
 
-# 9. DLLs nach dem Build automatisch in den build-Ordner kopieren
+# Wir verlinken die SFML-Komponenten
+target_link_libraries(SpaceInvader 
+    sfml-graphics 
+    sfml-window 
+    sfml-system 
+    sfml-audio
+)
+
+# 7. DLLs und Assets kopieren (Damit die .exe beim Starten alles findet)
 if(WIN32)
+    # Kopiert den assets Ordner in den build-Ordner
     add_custom_command(TARGET SpaceInvader POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${SFML_DIR}/../../../bin"
-        $<TARGET_FILE_DIR:SpaceInvader>)
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+        "$<TARGET_FILE_DIR:SpaceInvader>/assets")
+        
+    # Kopiert alle DLLs aus deinem Hauptverzeichnis in den build-Ordner
+    file(GLOB ALL_DLLS "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
+    foreach(dll ${ALL_DLLS})
+        add_custom_command(TARGET SpaceInvader POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy ${dll} $<TARGET_FILE_DIR:SpaceInvader>)
+    endforeach()
 endif()
