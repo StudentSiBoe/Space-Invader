@@ -12,14 +12,15 @@ set(SFML_INCLUDE_DIR "${SFML_BASE_DIR}/SFML_include")
 set(SFML_LIB_DIR "${SFML_BASE_DIR}/SFML_lib")
 
 # 3. Quellen finden
-file(GLOB SOURCES "*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 
 # 4. EXE erstellen
 add_executable(SpaceInvader ${SOURCES})
 
 # 5. Header-Verzeichnisse (Hier liegen deine .hpp Dateien)
 target_include_directories(SpaceInvader PRIVATE 
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/SFML/SFML_include
     ${SFML_INCLUDE_DIR}
 )
 
