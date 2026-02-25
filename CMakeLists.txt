@@ -45,7 +45,7 @@ if(WIN32)
         "$<TARGET_FILE_DIR:SpaceInvader>/assets")
         
     # Kopiert alle DLLs aus deinem Hauptverzeichnis in den build-Ordner
-    file(GLOB ALL_DLLS "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
+    file(GLOB ALL_DLLS "${CMAKE_CURRENT_SOURCE_DIR}/SFML/SFML_dlls/*.dll")
     foreach(dll ${ALL_DLLS})
         add_custom_command(TARGET SpaceInvader POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy ${dll} $<TARGET_FILE_DIR:SpaceInvader>)
